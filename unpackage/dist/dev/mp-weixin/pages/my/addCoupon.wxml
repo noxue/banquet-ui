@@ -1,0 +1,1 @@
+<view><form data-event-opts="{{[['submit',[['bindSave',['$event']]]]]}}" bindsubmit="__e"><view class="form-box"><input class="input" name="coupon" placeholder="请输入优惠码" type="text" value="{{phone}}"/></view><button class="save-btn" formType="submit" type="warn">添加</button></form></view>

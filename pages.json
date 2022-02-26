@@ -1,0 +1,208 @@
+{
+	"pages": [{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "百家宴",
+				"enablePullDownRefresh": true,
+				// "navigationStyle": "custom",
+				"backgroundTextStyle": "dark"
+			}
+		},
+		{
+			"path": "pages/intro/intro",
+			"style": {}
+		},
+		{
+			"path": "pages/cook/cook",
+			"style": {
+				"navigationBarTitleText": "找厨师"
+			}
+		},
+		{
+			"path": "pages/cook/apply/agreement",
+			"style": {
+				"navigationBarTitleText": "协议"
+			}
+		},
+		{
+			"path": "pages/cook/apply/cookOne",
+			"style": {
+				"navigationBarTitleText": "成为厨师"
+			}
+		},
+		{
+			"path": "pages/cook/apply/cookTwo",
+			"style": {
+				"navigationBarTitleText": "申请成为厨师"
+			}
+		},
+		{
+			"path": "pages/chefList/chefList",
+			"style": {
+				"navigationBarTitleText": "厨师列表"
+			}
+		},
+		{
+			"path": "pages/intro/details",
+			"style": {}
+		},
+		{
+			"path": "pages/login/login",
+			"style": {
+				"navigationBarTitleText": "登录"
+			}
+		},
+		{
+			"path": "pages/my/my",
+			"style": {
+				"navigationBarTitleText": "我的",
+				"enablePullDownRefresh": false,
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/address/list",
+			"style": {
+				"navigationBarTitleText": "常用地址"
+			}
+		},
+		{
+			"path": "pages/address/edit",
+			"style": {
+				"navigationBarTitleText": "常用地址"
+			}
+		},
+		{
+			"path": "pages/address/search",
+			"style": {
+				"navigationBarTitleText": "搜索地址"
+			}
+		},
+		{
+			"path": "pages/order/chefConfimeOrder",
+			"style": {
+				"navigationBarTitleText": "快速预约"
+			}
+		},
+		{
+			"path": "pages/order/comboConfimeOrder",
+			"style": {
+				"navigationBarTitleText": "套餐预约"
+			}
+		},
+		// {
+		// 	"path": "pages/order/confimeOrder",
+		// 	"style": {
+		// 		"navigationBarTitleText": "确认订单"
+		// 	}
+		// },
+		{
+			"path": "pages/order/pay",
+			"style": {
+				"navigationBarTitleText": "支付"
+			}
+		},
+		{
+			"path": "pages/order/balanceRecharge",
+			"style": {
+				"navigationBarTitleText": "会员充值"
+			}
+		},
+		{
+			"path": "pages/my/useHelp",
+			"style": {
+				"navigationBarTitleText": "使用帮助"
+			}
+		},
+		{
+			"path": "pages/my/userProtocol",
+			"style": {
+				"navigationBarTitleText": "用户协议"
+			}
+		},
+		{
+			"path": "pages/goods/shopList",
+			"style": {}
+		},
+		{
+			"path": "pages/goods/shopDetail",
+			"style": {}
+		},
+
+		{
+			"path": "pages/my/coupon",
+			"style": {
+				"navigationBarTitleText": "我的优惠券"
+			}
+		},
+		{
+			"path": "pages/my/addCoupon",
+			"style": {
+				"navigationBarTitleText": "添加优惠券"
+			}
+		},
+		{
+			"path": "pages/my/orderList",
+			"style": {
+				"navigationBarTitleText": "我的订单"
+			}
+		},
+		{
+			"path": "pages/my/orderDetail",
+			"style": {
+				"navigationBarTitleText": "订单详情"
+			}
+		},
+		{
+			"path": "pages/my/orderStatus",
+			"style": {
+				"navigationBarTitleText": "订单状态"
+			}
+		},
+		{
+			"path": "pages/my/balance",
+			"style": {
+				"navigationBarTitleText": "会员余额"
+			}
+		}
+	],
+	"tabBar": {
+		"color": "#6e6d6b",
+		"selectedColor": "#f06e43",
+		"borderStyle": "white",
+		"backgroundColor": "#fff",
+		"list": [{
+				"pagePath": "pages/index/index",
+				"text": "首页",
+				"iconPath": "static/images/home-off.png",
+				"selectedIconPath": "static/images/home-on.png"
+			},
+			{
+				"pagePath": "pages/cook/cook",
+				"text": "厨师",
+				"iconPath": "static/images/intro-off.png",
+				"selectedIconPath": "static/images/intro-on.png"
+			},
+			{
+				"pagePath": "pages/my/orderList",
+				"text": "订单",
+				"iconPath": "static/images/order-off.png",
+				"selectedIconPath": "static/images/order-on.png"
+			},
+			{
+				"pagePath": "pages/my/my",
+				"text": "我的",
+				"iconPath": "static/images/my-off.png",
+				"selectedIconPath": "static/images/my-on.png"
+			}
+		]
+	},
+	"sitemapLocation": "sitemap.json",
+	"globalStyle": {
+		"backgroundTextStyle": "light",
+		"navigationBarBackgroundColor": "#fff",
+		"navigationBarTitleText": "小程序名字",
+		"navigationBarTextStyle": "black"
+	},
+	"subPackages": []
+}

@@ -1,0 +1,1 @@
+<view class="memberCon"><block wx:for="{{memberList}}" wx:for-item="item" wx:for-index="index" wx:key="index"><view data-degree="{{item.degree}}" data-event-opts="{{[['tap',[['payMember',['$event']]]]]}}" bindtap="__e"><image class="memberImg" src="{{item.img2}}"></image></view></block></view>

@@ -1,0 +1,42 @@
+miniprogram-to-uniapp v2 转换日志
+
+工具版本：v2.0.11
+转换模式：HBuilder X
+是否合并css：是
+项目 'aiDaChu' 开始转换...
+sourceFolder = H:/work/aiDaChu
+搜索到159个文件，耗时：3ms
+
+write pages.json success!
+write manifest.json success!
+write main.js success!
+
+
+统计信息：
+
+vue文件数量: 24
+支付api数量: 2
+登录api数量: 4
+
+恭喜你，转换完成！
+用时: 10.323s
+在该小程序项目的同级目录可以看到_uni结尾的项目，即是转换好的uniapp项目，相关日志在该目录里。
+
+注：如有疑问，请添加QQ群(780359397、361784059、603659851)或https://github.com/zhangdaren/miniprogram-to-uniapp进行反馈！
+
+
+hbxExecutableProgram  D:\Program Files\HBuilderX\HBuilderX.exe
+Error: Command failed: D:\Program Files\HBuilderX\HBuilderX.exe undefined
+'D:\Program' �����ڲ����ⲿ���Ҳ���ǿ����еĳ���
+���������ļ���
+
+    at ChildProcess.exithandler (child_process.js:308:12)
+    at ChildProcess.emit (events.js:314:20)
+    at maybeClose (internal/child_process.js:1022:16)
+    at Process.ChildProcess._handle.onexit (internal/child_process.js:287:5)
+Error code: 1
+Signal received: null
+stdout: 
+stderr: 'D:\Program' �����ڲ����ⲿ���Ҳ���ǿ����еĳ���
+���������ļ���
+

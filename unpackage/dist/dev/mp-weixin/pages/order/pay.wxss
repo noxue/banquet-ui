@@ -1,0 +1,116 @@
+
+.orderPage,
+page {
+	background-color: #f5f5f9;
+}
+.downTimes {
+	width: 100%;
+	padding: 15rpx 0;
+	background-color: #fde8d4;
+	color: #de832a;
+	text-align: center;
+	font-size: 24rpx;
+}
+.headCon {
+	padding: 20rpx;
+	background-color: #fff;
+	margin-bottom: 20rpx;
+}
+.headCon .title {
+	color: #000;
+	font-size: 34rpx;
+}
+.headCon .address {
+	color: #444;
+	font-size: 28rpx;
+	margin-top: 15rpx;
+}
+.couponCons {
+	padding: 0 20rpx;
+	background-color: #fff;
+	margin-bottom: 20rpx;
+}
+.couponCons .my-item {
+	width: 100%;
+	padding: 10rpx 0;
+	border-bottom: 1px solid #f5f5f5;
+	height: 80rpx;
+	line-height: 80rpx;
+	font-size: 28rpx;
+	display: flex;
+	align-items: center;
+}
+.right-icon {
+	width: 40rpx;
+	height: 28rpx;
+}
+picker {
+	height: 100%;
+	flex: 1;
+	text-align: right;
+	margin-right: 10rpx;
+}
+.payCon {
+	background-color: #fff;
+}
+.payTitle {
+	border-bottom: 1px solid #f5f5f5;
+	padding: 10rpx 20rpx;
+	color: #000;
+	font-size: 32rpx;
+}
+.payList {
+	padding: 20rpx;
+}
+.wxpay {
+	display: flex;
+	align-items: center;
+	border-bottom: 1px solid #f5f5f5;
+	padding: 10rpx 0;
+}
+.wxpay .typeImg {
+	width: 80rpx;
+	height: 80rpx;
+}
+.wxpay .content {
+	flex: 1;
+	margin-left: 10rpx;
+}
+.wxpay .content .payName {
+	color: #000;
+	font-size: 32rpx;
+}
+.wxpay .content .dec {
+	color: #444;
+	font-size: 26rpx;
+	margin-top: 10rpx;
+}
+.wxpay .chooseImg {
+	width: 60rpx;
+	height: 60rpx;
+}
+.footer {
+	position: fixed;
+	left: 0;
+	bottom: 0;
+	background-color: #fff;
+	width: 100%;
+	display: flex;
+	height: 100rpx;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0 50rpx;
+	box-sizing: border-box;
+}
+.footer .price {
+	color: red;
+	font-size: 32rpx;
+}
+.footer .payBtns {
+	background-color: red;
+	color: #fff;
+	font-size: 32rpx;
+	padding: 10rpx 40rpx;
+	border-radius: 6px;
+}
+

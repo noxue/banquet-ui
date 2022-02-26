@@ -1,0 +1,114 @@
+
+page {
+	background: #fff;
+}
+.banner {
+	height: 300rpx;
+	margin-top: 50rpx;
+	width: 750rpx;
+}
+.banner image {
+	height: 300rpx;
+	margin: 0 30rpx;
+	width: 690rpx;
+}
+.city {
+	color: #333;
+	font-size: 30rpx;
+	line-height: 50rpx;
+	margin: 25rpx 30rpx 0;
+}
+.city,
+.title {
+	height: 50rpx;
+	width: 690rpx;
+}
+.title {
+	margin: 40rpx 30rpx 30rpx;
+}
+.title image {
+	float: left;
+	height: 42rpx;
+	margin-top: 4rpx;
+	width: 48rpx;
+}
+.title text {
+	color: #000;
+	float: left;
+	font-size: 38rpx;
+	height: 50rpx;
+	line-height: 50rpx;
+	margin-left: 20rpx;
+	width: auto;
+}
+.title text text {
+	float: right;
+	font-size: 28rpx;
+	margin-left: 0rpx;
+}
+.tiaojian {
+	height: auto;
+	margin: 20rpx 30rpx 0;
+	overflow: hidden;
+	width: 690rpx;
+}
+.tiaojian text {
+	color: #333;
+	display: inline-block;
+	font-size: 30rpx;
+	line-height: 56rpx;
+	text-align: justify;
+	width: 690rpx;
+}
+.danxuan {
+	height: auto;
+	margin: 0 30rpx 20rpx;
+	overflow: hidden;
+	width: 690rpx;
+}
+.checked-lable {
+	float: left;
+}
+.danxuan view {
+	color: #333;
+	float: right;
+	font-size: 30rpx;
+	line-height: 50rpx;
+	width: 630rpx;
+}
+.danxuan view text {
+	color: #429ce8;
+	width: auto !important;
+}
+.chengdan {
+	color: #e6944b;
+	font-size: 26rpx;
+	height: auto;
+	line-height: 46rpx;
+	margin: 80rpx 30rpx 30rpx;
+	overflow: hidden;
+	width: 690rpx;
+}
+.chengnuo {
+	background: #fff;
+	border-top: 1rpx solid #ececec;
+	bottom: 0rpx;
+	height: 97rpx;
+	left: 0rpx;
+	position: fixed;
+	right: 0rpx;
+	width: 750rpx;
+}
+.chengnuo text {
+	background: #c7c7c7;
+	border-radius: 14rpx;
+	color: #fff;
+	float: left;
+	font-size: 28rpx;
+	height: 68rpx;
+	line-height: 68rpx;
+	margin: 15rpx 0 0 30rpx;
+	text-align: center;
+	width: 690rpx;
+}
+

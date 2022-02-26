@@ -1,0 +1,73 @@
+{
+    "pages": [
+        "pages/index/index",
+        "pages/intro/intro",
+        "pages/intro/details",
+        "pages/login/login",
+        "pages/my/my",
+        "pages/address/list",
+        "pages/address/edit",
+        "pages/address/search",
+        "pages/order/chefConfimeOrder",
+        "pages/order/comboConfimeOrder",
+        "pages/order/pay",
+        "pages/order/balanceRecharge",
+        "pages/my/useHelp",
+        "pages/my/userProtocol",
+        "pages/goods/shopList",
+        "pages/goods/shopDetail",
+        "pages/my/coupon",
+        "pages/my/addCoupon",
+        "pages/my/orderList",
+        "pages/my/orderDetail",
+        "pages/my/orderStatus",
+        "pages/my/balance"
+    ],
+    "subPackages": [],
+    "window": {
+        "backgroundTextStyle": "light",
+        "navigationBarBackgroundColor": "#fff",
+        "navigationBarTitleText": "小程序名字",
+        "navigationBarTextStyle": "black"
+    },
+    "tabBar": {
+        "color": "#6e6d6b",
+        "selectedColor": "#f06e43",
+        "borderStyle": "white",
+        "backgroundColor": "#fff",
+        "list": [
+            {
+                "pagePath": "pages/index/index",
+                "text": "首页",
+                "iconPath": "static/images/home-off.png",
+                "selectedIconPath": "static/images/home-on.png"
+            },
+            {
+                "pagePath": "pages/intro/intro",
+                "text": "服务",
+                "iconPath": "static/images/intro-off.png",
+                "selectedIconPath": "static/images/intro-on.png"
+            },
+            {
+                "pagePath": "pages/my/orderList",
+                "text": "订单",
+                "iconPath": "static/images/order-off.png",
+                "selectedIconPath": "static/images/order-on.png"
+            },
+            {
+                "pagePath": "pages/my/my",
+                "text": "我的",
+                "iconPath": "static/images/my-off.png",
+                "selectedIconPath": "static/images/my-on.png"
+            }
+        ]
+    },
+    "permission": {
+        "scope.userLocation": {
+            "desc": "你的位置信息将用于小程序位置接口的效果展示"
+        }
+    },
+    "plugins": {},
+    "usingComponents": {},
+    "sitemapLocation": "sitemap.json"
+}

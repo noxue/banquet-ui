@@ -1,0 +1,90 @@
+{
+    "setting": {},
+    "condition": {
+        "plugin": {
+            "list": []
+        },
+        "game": {
+            "list": []
+        },
+        "gamePlugin": {
+            "list": []
+        },
+        "miniprogram": {
+            "list": [
+                {
+                    "name": "pages/intro/intro",
+                    "pathName": "pages/intro/intro",
+                    "query": "",
+                    "scene": null
+                },
+                {
+                    "name": "pages/myOrder/myOrder",
+                    "pathName": "pages/myOrder/myOrder",
+                    "query": "",
+                    "scene": null
+                },
+                {
+                    "name": "pages/orderDetail/orderDetail",
+                    "pathName": "pages/orderDetail/orderDetail",
+                    "query": "id=undefined",
+                    "scene": null
+                },
+                {
+                    "name": "pages/order/pay",
+                    "pathName": "pages/order/pay",
+                    "query": "id=0123123132",
+                    "scene": null
+                },
+                {
+                    "name": "pages/memberList/memberList",
+                    "pathName": "pages/memberList/memberList",
+                    "query": "",
+                    "scene": null
+                },
+                {
+                    "name": "pages/shopDetail/shopDetail",
+                    "pathName": "pages/shopDetail/shopDetail",
+                    "query": "id=10237",
+                    "scene": null
+                },
+                {
+                    "name": "pages/my/my",
+                    "pathName": "pages/my/my",
+                    "query": "",
+                    "scene": null
+                },
+                {
+                    "name": "pages/shopList/shopList",
+                    "pathName": "pages/shopList/shopList",
+                    "query": "id=%2Fparty%2Finfo%2F1047",
+                    "scene": null
+                },
+                {
+                    "name": "pages/my/coupon",
+                    "pathName": "pages/my/coupon",
+                    "query": "",
+                    "scene": null
+                },
+                {
+                    "name": "pages/logs/logs",
+                    "pathName": "pages/logs/logs",
+                    "query": "",
+                    "scene": null
+                },
+                {
+                    "name": "pages/order/pay",
+                    "pathName": "pages/order/pay",
+                    "query": "id=0123123132",
+                    "scene": null
+                },
+                {
+                    "name": "pages/cook/apply/cookOne",
+                    "pathName": "pages/cook/apply/cookOne",
+                    "query": "",
+                    "scene": null
+                }
+            ]
+        }
+    }
+}
