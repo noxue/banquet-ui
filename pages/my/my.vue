@@ -1,27 +1,24 @@
 <template>
 	<view class="container">
-		<view class="bgImgCon"><image class="bgImg" src="/static/images/user_bg.png"></image></view>
+		<view class="bgImgCon"><image class="bgImg" src="/static/images/user_bg.png" style="height: 390rpx;"></image></view>
 		<view class="userCon">
 			<view style="color: #FFFFFF;" :style="'padding-top:' + css.pageTop + 'px;'">个人中心</view>
-			<!-- <view class="b-fff user-img" style="margin-top: 50rpx;"><image class="head-img" src="../../static/mock/touxiang.jpg"></image></view> -->
+			<view class="b-fff user-img" style="margin-top: 50rpx;"><image class="head-img" src="http://image.noxue.com/baijiayan/logo.png"></image></view>
 			<view>
-				<view class="vipBtn" v-if="degree != '0'">
-					<text :class="degree == '1' ? 'bg_8d55f5' : degree == '2' ? 'bg_ff003c' : degree == '3' ? 'bg_03b9ba' : 'bg_fcae19'">{{ degree == '1' ? '体验卡' : degree == '2' ? '普卡' : degree == '3' ? '银卡' : '金卡' }}VIP</text>
-				</view>
-				<view class="userName" v-if="cookieAuth">{{ userInfo.nickName }}</view>
-				<button @tap="jumpLogin" class="loginBtn" hoverClass="loginBtn-hover" :plain="true" size="mini" type="" v-else>快捷登录</button>
+				<view v-if="isLogin" class="userName">{{ userInfo.phone }}</view>
+				<button v-else @tap="toPageLogin" class="loginBtn" hoverClass="loginBtn-hover" :plain="true" size="mini" type="">快捷登录</button>
 			</view>
 		</view>
 
 		<view style="margin-top: 15rpx;width: 100%;border-radius: 15rpx;padding:0rpx 10rpx;box-sizing: border-box;">
 			<view style="background-color: #fff;width: 100%;border-radius: 15rpx;display: flex;padding: 30rpx 0rpx;">
 				<view style="display: flex;flex-direction: column;width: 50%;display: flex;align-items: center;">
-					<view style="font-size: 40rpx;">2000</view>
+					<view style="font-size: 40rpx;">0</view>
 					<view style="font-size: 30rpx;color: #8c8c8c;">余额</view>
 				</view>
 				<view style="width: 1px;background-color: #d4d4d4;"></view>
-				<view style="display: flex;flex-direction: column;width: 50%;display: flex;align-items: center;">
-					<view style="font-size: 40rpx;">5</view>
+				<view style="display: flex;flex-direction: column;width: 50%;display: flex;align-items: center;" @click="toPages('/pages/my/coupon')">
+					<view style="font-size: 40rpx;">0</view>
 					<view style="font-size: 30rpx;color: #8c8c8c;">优惠卷</view>
 				</view>
 			</view>
@@ -30,40 +27,49 @@
 		<view style="margin: 15rpx;width: 100%;border-radius: 15rpx;padding:0rpx 10rpx;box-sizing: border-box;">
 			<view style="background-color: #fff;width: 100%;border-radius: 15rpx;padding: 30rpx 0rpx;">
 				<view style="display: flex;">
+					<!--  @click="toPages('/pages/my/coupon')" -->
 					<view class="item_content">
 						<image class="item_icon" src="../../static/images/1.png"></image>
 						<view class="item_text">我的会员</view>
 					</view>
-					<view class="item_content">
+					<view class="item_content" @click="toPages('/pages/my/coupon')">
 						<image class="item_icon" src="../../static/images/7.png"></image>
 						<view class="item_text">优惠卷</view>
 					</view>
-					<view class="item_content">
+					<view class="item_content" @click="toPages('/pages/address/list')">
 						<image class="item_icon" src="../../static/images/4.png"></image>
 						<view class="item_text">常用地址</view>
 					</view>
 				</view>
 				<view style="display: flex;">
-					<view class="item_content">
+					<view class="item_content" @click="toPages('/pages/my/useHelp')">
 						<image class="item_icon" src="../../static/images/3.png"></image>
 						<view class="item_text">使用帮助</view>
 					</view>
-					<view class="item_content">
+					<view class="item_content" @click="toPages('/pages/my/userProtocol')">
 						<image class="item_icon" src="../../static/images/6.png"></image>
 						<view class="item_text">用户协议</view>
 					</view>
-					<view class="item_content">
+					<!-- 	<view class="item_content">
 						<image class="item_icon" src="../../static/images/8.png"></image>
 						<view class="item_text">切换城市</view>
+					</view> -->
+					<view class="item_content" @click="callPhone">
+						<image class="item_icon" src="../../static/images/8.png"></image>
+						<view class="item_text">联系我们</view>
 					</view>
 				</view>
 				<view style="display: flex;">
-					<view class="item_content" @click="toPagesApply">
-						<image class="item_icon" src="../../static/images/8.png"></image>
-						<view class="item_text">申请厨师</view>
+					<view class="item_content" @click="toPagesCook">
+						<image class="item_icon" src="../../static/images/9.png"></image>
+						<view class="item_text">{{ cookText }}</view>
 					</view>
-					<view class="item_content">
-						<image class="item_icon" src="../../static/images/2.png"></image>
+					<view class="item_content" @click="toPagesWorkTime">
+						<image class="item_icon" src="../../static/images/10.png"></image>
+						<view class="item_text">接单时间</view>
+					</view>
+					<view class="item_content" @click="logout">
+						<image class="item_icon" src="../../static/images/11.png"></image>
 						<view class="item_text">退出登录</view>
 					</view>
 				</view>
@@ -77,21 +83,26 @@
 
 <script>
 var app = getApp();
+import userServe from '../../libs/userServe.js';
+import { toPageUserLoginTimer } from '../../libs/router.js';
+import config from '@/config/config.js';
+
 export default {
 	data() {
 		return {
 			css: {
 				pageTop: 0
 			},
-			cookieAuth: false, // TODO 这里判断不正确
-			addressArray: [],
-			addressNndex: 0,
+			isLogin: false,
 			userInfo: {
-				// 用户信息
-				nickName: '' //  用户昵称
+				phone: '百家宴用户',
+				pic: '1.jpg', // TODO 暂时没有使用
+				address: '',
+				is_auth: true, // 是否是认证厨师
+				cook_status: -1 // 是否是厨师
 			},
-			city: null,
-			degree: '0'
+			cookText: '厨师', // 厨师文本
+			tel: '1000000'
 		};
 	},
 	onLoad: function() {
@@ -99,206 +110,134 @@ export default {
 
 		uni.getSystemInfo({
 			success: function(res) {
-				console.log('页面尺寸', res);
 				that.css.pageTop = res.safeAreaInsets.top;
 
 				// #ifdef MP-WEIXIN
 				let menuButtonInfo = uni.getMenuButtonBoundingClientRect();
-				console.log('页面尺寸', menuButtonInfo);
-				that.css.pageTop = menuButtonInfo.top - 10; // TODO 先这样
+				that.css.pageTop = menuButtonInfo.top - 10; // TODO 先这样,计算不准确
 				// #endif
 			}
 		});
-
-		if (null == app.globalData.userInfo) {
-			that.setData({
-				userInfo: {
-					avatarUrl: '/static/images/head.png',
-					nickName: '百家宴用户'
-				}
-			});
-		} else {
-			that.setData({
-				userInfo: app.globalData.userInfo
-			});
-		}
-
-		this.$api.system.set.request().then(data => {
-			this.addressArray = data.city;
-			that.getCity(data.city);
-		});
-
-		this.getUserInfo();
 	},
 	onShow: function() {
-		app.globalData.orderShow = null;
+		if (userServe.checkUserLogin()) {
+			this.isLogin = true;
+			this.userInfoRequest();
+		} else {
+			this.isLogin = false;
+		}
+	},
+	onPullDownRefresh() {
+		uni.stopPullDownRefresh();
+		if (userServe.checkUserLogin()) {
+			this.userInfoRequest();
+		}
 	},
 	methods: {
-		getUserInfo: function() {
-			this.$api.user.info.request().then(data => {
-				this.degree = data.degree;
-			});
-		},
+		userInfoRequest: function() {
+			this.$api.users.me.request().then(data => {
+				this.userInfo = data;
 
-		getCity: function(a) {
-			var that = this;
-
-			uni.getLocation({
-				type: 'gcj02',
-				success: function(t) {
-					var o = t.latitude;
-					var s = t.longitude;
-					that.loadCity(o, s, a);
-				},
-				fail: function() {}
-			});
-		},
-
-		loadCity: function(e, t, o) {
-			var that = this;
-			uni.request({
-				url: 'https://api.map.baidu.com/geocoder/v2/?ak=96Vsml8Wo79ANcOHzat1KG3pQ9lLWeQY&location=' + e + ',' + t + '&output=json',
-				header: {
-					'Content-Type': 'application/json'
-				},
-				success: function(e) {
-					console.log('哈哈', e);
-					var t = e.data.result.addressComponent.city;
-					t = t.replace('市', '');
-
-					for (var n = 0; n < o.length; n++) {
-						if (t != o[n].name || app.globalData.cityId) {
-							if (app.globalData.cityId == o[n].id) {
-								that.setData({
-									addressNndex: n
-								});
-							}
-						} else {
-							that.setData({
-								addressNndex: n
-							});
-							uni.setStorage({
-								key: 'cityId',
-								data: o[n].id,
-								success: function(e) {
-									app.globalData.getCityId();
-								}
-							});
-						}
-					}
-
-					that.setData({
-						city: t
-					});
-				}
-			});
-		},
-
-		bindPickerChange: function(e) {
-			var that = this;
-			this.setData({
-				addressNndex: e.detail.value
-			});
-			uni.setStorage({
-				key: 'cityId',
-				data: that.addressArray[e.detail.value].id,
-				success: function(e) {
-					app.globalData.getCityId();
-				}
-			});
-		},
-
-		jumpMember: function() {
-			if (this.cookieAuth && '0' == this.degree) {
-				uni.navigateTo({
-					url: '/pages/order/balanceRecharge'
-				});
-			} else {
-				if (this.cookieAuth && '0' != this.degree) {
-					uni.navigateTo({
-						url: '/pages/my/balance'
-					});
+				if (this.userInfo.is_cook == 1) {
+					this.cookText = '厨师';
 				} else {
-					uni.navigateTo({
-						url: '/pages/login/login'
-					});
+					if (this.userInfo.cook_status === 0) {
+						this.cookText = '申请厨师';
+					} else if (this.userInfo.cook_status === 1) {
+						this.cookText = '厨师审核中';
+					} else if (this.userInfo.cook_status === 2) {
+						this.cookText = '厨师';
+					} else if (this.userInfo.cook_status === 3) {
+						this.cookText = '申请厨师';
+					}
 				}
-			}
+			});
 		},
 
-		jumpCoupon: function() {
-			if (this.cookieAuth) {
+		toPagesCook() {
+			if (this.isLogin === false) {
+				toPageUserLoginTimer();
+				return false;
+			}
+
+			if (this.userInfo.cook_status === 0) {
 				uni.navigateTo({
-					url: '/pages/my/coupon'
+					url: '/pages/cook/apply/agreement'
 				});
 			} else {
 				uni.navigateTo({
-					url: '/pages/login/login'
+					url: '/pages/cook/apply/apply'
 				});
 			}
 		},
 
-		jumpAddress: function() {
-			if (this.cookieAuth) {
+		toPagesWorkTime() {
+			if (this.isLogin === false) {
+				toPageUserLoginTimer();
+				return false;
+			}
+
+			if (this.userInfo.cook_status === 2) {
+				this.toPages('/pages/cook/workTime');
+			} else {
+				uni.showToast({
+					title: '申请成为厨师后可添加',
+					icon: 'none'
+				});
+			}
+		},
+
+		toPages(url) {
+			if (this.isLogin === true) {
 				uni.navigateTo({
-					url: '/pages/address/list'
+					url: url
 				});
 			} else {
-				uni.navigateTo({
-					url: '/pages/login/login'
-				});
+				toPageUserLoginTimer();
 			}
 		},
 
 		callPhone: function() {
 			var that = this;
-			uni.makePhoneCall({
-				phoneNumber: that.addressArray[that.addressNndex].tel
-			});
+
+			if (config.mobile) {
+				uni.makePhoneCall({
+					phoneNumber: this.tel
+				});
+			} else {
+				uni.showToast({
+					icon: 'none',
+					title: '敬请期待'
+				});
+			}
 		},
 
-		jumpHelp: function() {
-			uni.navigateTo({
-				url: '/pages/my/useHelp'
-			});
-		},
-
-		jumpProtocol: function() {
-			uni.navigateTo({
-				url: '/pages/my/userProtocol'
-			});
-		},
-
-		jumpLogin: function() {
-			uni.navigateTo({
-				url: '/pages/login/login'
-			});
-		},
-		
-		toPagesApply(){
-			uni.navigateTo({
-				url:'/pages/cook/apply/agreement'
-			})
-		},
-
-		exitLogin: function() {
-			var that = this;
-			uni.removeStorage({
-				key: 'cookieAuth',
-				success: function(t) {
-					uni.removeStorage({
-						key: 'nickName',
-						success: function(t) {
-							app.globalData.getCookieAuth();
-							that.setData({
-								degree: '0'
-							});
-							uni.switchTab({
-								url: '/pages/index/index'
-							});
-						}
-					});
+		logout() {
+			uni.showModal({
+				content: '确定退出登录',
+				success(res) {
+					if (res.confirm === true) {
+						userServe.logout();
+						this.isLogin = false;
+						this.userInfo = {
+							phone: '百家宴用户',
+							pic: '1.jpg',
+							address: '',
+							is_auth: false,
+							is_cook: false
+						};
+					}
 				}
+			});
+		},
+
+		toPageLogin: function() {
+			toPageUserLoginTimer();
+		},
+
+		toPagesApply() {
+			uni.navigateTo({
+				url: '/pages/cook/apply/agreement'
 			});
 		}
 	}

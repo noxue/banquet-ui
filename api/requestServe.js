@@ -1,4 +1,8 @@
-import indexMock from './indexMock.js'
+import {
+	toPageUserLoginTimer,
+	toPageUserRegisterTimer
+} from '@/libs/router.js'
+import userServe from '@/libs/userServe.js'
 
 /**
  * 在wx.request封装的配置层
@@ -33,9 +37,6 @@ class requestServe {
 		// TODO 这项没有完成
 		this.errorUrl = ''; // 接口出现错误用来报警的api,正常来说后台应该自己有的，主要用来前期测试交流开发减少沟通
 
-		// 模拟数据api配置
-		this.openMock = true; // 开启模拟数据,统一判断
-
 		/**
 		 * 返回数据处理配置
 		 */
@@ -44,7 +45,8 @@ class requestServe {
 			dataField: 'data', // 数据存储
 			msgField: 'msg' // 提示消息信息
 		}
-		this.codeSuccess = 200 // 正确判断条件
+		this.codeSuccess = 0 // 正确判断条件
+		this.codeError = 300 // 普通错误提示
 		this.codeFunList = {} // 特殊拦截判断
 		this.codeFunListSet()
 
@@ -56,24 +58,15 @@ class requestServe {
 		this.showLoadingNum = 0
 	}
 
-	// 检查用户是否登录
-	loginCheck() {
-		return true
-	}
-
-	// 去登录页面
-	toLogin() {
-		return false;
-	}
-
 	/**
 	 * [封装方法] 配置token
 	 */
 	tokenCheck(config) {
+		let token;
 		if (config.apiType == 'user') { //需要用户登录
 			this.log(config.log + '[执行用户强制登录检测]');
 
-			if (!this.loginCheck()) return this.toLogin();
+			if (userServe.checkUserLogin(true) === false) return false
 		} else if (config.apiType == 'notUser') { // 强制不使用token
 			return true
 		} else if (config.apiType == 'default') {
@@ -83,7 +76,7 @@ class requestServe {
 			return false;
 		}
 
-		config.header['token'] = ''
+		config.header['Authorization'] = 'Bearer ' + userServe.getUserToken()
 		return true
 	}
 
@@ -91,21 +84,83 @@ class requestServe {
 	 * [封装方法] 通用异常code判断
 	 */
 	codeFunListSet(code, fun) {
+		let _this = this;
+
 		const codeList = {
-			"301": this.toLogin
+			[_this.codeSuccess]: function(config, data, code, msg) {
+				console.log('完成', config)
+				// msg ? msg : config.showSuccessLoadingMessage
+				if (config.showSuccessLoading == true) _this.alert(config.showSuccessLoadingMessage);
+				if (typeof config.success === 'function') config.success(data)
+
+				return false
+			},
+			[_this.codeError]: function(config, data, code, msg) {
+				_this.alert(msg)
+
+				return false
+			},
+			'400': toPageUserLoginTimer,
+			"401": toPageUserLoginTimer
 		}
 
 		this.codeFunList = codeList
 	}
 
+	/**
+	 * 请求数据
+	 */
+	request(setConfig) {
+		setConfig['log'] = '【' + new Date().getDate() + '】-【api接口url】【' + setConfig.api + '】-->'; // log日志输出
+
+		//默认配置合并,最终api配置: 默认配置 -> api列表配置 -> 独立配置
+		console.log('请求配置', setConfig)
+		var config = Object.assign({}, this.defaultConfig, setConfig);
+		this.log('[api配置]', config)
+
+		if (this.shakeCheck(config) === false) return false // 防抖限制
+		if (this.tokenCheck(config) === false) return false // 配置token
+		this.showLoading(config); // 执行lading函数
+
+		// 请求参数过滤
+		this.requestParamsFiltering(config)
+
+		// [parameter传参]: 配置请求来源
+		if (config.source) data['source'] = config.source;
+
+		let success = this.success(config)
+		let fail = this.fail(config)
+
+		// 请示数据
+		var cache = wx.request({
+			url: config.url,
+			method: config.method,
+			data: config.data,
+			dataType: 'json',
+			header: config.header,
+			success: success,
+			fail: fail,
+			complete: res => {
+				// _this.hideLoading();
+			}
+		})
+
+		// 用于数据请求中断,需要这种的话
+		return cache;
+	}
+
+
 	// 请求后拦截
 	success(config) {
 		let _this = this;
+
 		return function(res) {
+      // 不需要对返回数据做出反应
 			if (config.isProcessReturnData === true) return true;
+      
 			_this.log(config.log + '[success数据]:', res);
 
-			_this.hideLoading();
+			_this.hideLoading(config);
 
 			// html异常错误,不等于200走不到该程序内
 			if (res.statusCode !== 200) {
@@ -131,15 +186,12 @@ class requestServe {
 			// 通用处理,返回false的就不会再继续往下走
 			if (_this.codeFunList[code] && typeof _this.codeFunList[code] ===
 				'function') {
-				let check = _this.codeFunList[code](content);
+				let check = _this.codeFunList[code](config, data, code, msg);
 				if (check === false) return false
 			}
 
-			if (code == _this.codeSuccess) { //获取正常数据
-				if (config.showSuccessLoading == true) _this.alert(msg?.config.showSuccessLoadingMessage);
-				if (typeof config.success === 'function') config.success(data, res)
-			} else if (code || code === 0 || code === '0') { // 其他类型,进入codeError
-				if (config.showErrorLoading) alert(msg?.config.showErrorLoadingMessage);
+			if (code || code === 0 || code === '0') { // 其他类型,进入codeError
+				if (config.showErrorLoading) _this.alert(msg ? msg : config.showErrorLoadingMessage);
 				if (typeof config.codeError === 'function') config.codeError(content, res); // 进入codeError函数
 			} else {
 				_this.errorLog('request->success', res)
@@ -150,8 +202,10 @@ class requestServe {
 
 	// 接口异常使用
 	fail(config) {
+		let _this = this;
+
 		return function(res) {
-			_this.hideLoading();
+			_this.hideLoading(config);
 
 			wx.showModal({
 				title: '消息',
@@ -161,50 +215,6 @@ class requestServe {
 
 			if (typeof config.fail === 'function') config.fail(res)
 		}
-	}
-
-	/**
-	 * 请求数据
-	 */
-	request(setConfig) {
-		setConfig['log'] = '【' + new Date().getDate() + '】-【api接口url】【' + setConfig.api + '】-->'; // log日志输出
-
-		//默认配置合并,最终api配置: 默认配置 -> api列表配置 -> 独立配置
-		var config = Object.assign({}, this.defaultConfig, setConfig);
-		this.log('[api配置]', config)
-
-		if (this.shakeCheck(config) === false) return false // 防抖限制
-		if (this.tokenCheck(config) === false) return false // 配置token
-		this.showLoading(); // 执行lading函数
-
-		// 请求参数过滤
-		this.requestParamsFiltering(config)
-
-		// [parameter传参]: 配置请求来源
-		if (config.source) data['source'] = config.source;
-
-		let success = this.success(config)
-		let fail = this.fail(config)
-
-		// [虚拟返回数据]开启虚拟数据,直接返回结果
-		if (this.openMock == true && config.openMock === true) return success(this.mockDataGet(config));
-
-		// 请示数据
-		var cache = wx.request({
-			url: config.url,
-			method: config.method,
-			data: config.data,
-			dataType: 'json',
-			header: config.header,
-			success: success,
-			fail: fail,
-			complete: res => {
-				// _this.hideLoading();
-			}
-		})
-
-		// 用于数据请求中断,需要这种的话
-		return cache;
 	}
 
 	/**
@@ -228,7 +238,7 @@ class requestServe {
 	/**
 	 * 隐藏loading
 	 */
-	hideLoading() {
+	hideLoading(config) {
 		if (config.showLoading === true) {
 			this.showLoadingNum--
 			if (this.showLoadingNum <= 0) {
@@ -281,40 +291,6 @@ class requestServe {
 	}
 
 	/**
-	 * 模拟数据
-	 * @param {Object} api 请求url
-	 * @param {Object} params 请求参数
-	 */
-	mockDataGet(config) {
-		let api = config.api
-		let params = config.data
-		let apiPath = api.split('/'); //拆解数组
-		let virtualData = {} // 返回数据
-		let virtualReturn;
-
-		if (apiPath.length == 1) {
-			virtualReturn = indexMock[apiPath[0]]
-		} else if (apiPath.length == 2) {
-			virtualReturn = indexMock[apiPath[0]][apiPath[1]]
-		} else if (apiPath.length == 3) {
-			virtualReturn = indexMock[apiPath[0]][apiPath[1]][apiPath[2]]
-		}
-
-		// TODO 如果data是字符串,并且是https，则发送请求
-		console.log('怕減肥的', virtualReturn)
-		if (typeof virtualReturn === 'function') {
-			console.log('函數')
-			virtualData = virtualReturn(params)
-		} else {
-			virtualData = virtualReturn
-		}
-
-		// alert('请注意,正在使用虚拟数据');
-		this.log(config.log + '[虚拟返回数据]:', virtualData);
-		return virtualData
-	}
-
-	/**
 	 * 输出错误信息
 	 * @param {Object} content
 	 */
@@ -337,6 +313,7 @@ class requestServe {
 
 	// 错误提示
 	alert(content) {
+		console.log('弹出消息', content)
 		if (!content) return false;
 
 		var time = content.length / 4 * 1000;

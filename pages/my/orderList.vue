@@ -3,112 +3,135 @@
 		<view class="status-box">
 			<view @tap="statusTap" :class="'status-label ' + (index == currentType ? 'active' : '')" :data-index="index" v-for="(item, index) in statusType" :key="index">
 				{{ item }}
-				<view :class="tabClass[index]"></view>
+				<view></view>
 			</view>
 		</view>
 
-		<view class="no-order" v-if="orderList.length <= 0">
+		<view class="no-order" v-if="newTabel.length <= 0">
 			<image class="no-order-img" src="/static/images/no-order.png"></image>
 			<view class="text">暂无订单</view>
 		</view>
 
-		<view class="order-list" v-if="orderList.length > 0">
-			<view class="a-order" v-for="(item, index) in orderList" :key="index">
-				<view @tap="jumpDetail" class="order-date" :data-id="item.id">
-					<image class="providerImg" :src="item.kitchener.head_small" v-if="item.kitchener.head_small"></image>
-					<image class="providerImg" src="/static/images/no_user.png" v-if="!item.kitchener.head_small"></image>
-					<view class="providerTitle">{{ item.kitchener.name ? item.kitchener.name : '未分配厨师' }}</view>
-					<view class="status red">{{ item.status_text.state }}</view>
-				</view>
+		<view class="order-list" v-if="newTabel.length > 0">
+			<block v-for="(item, index) in newTabel">
+				<view class="a-order" :key="index">
+					<view @tap="jumpDetail" class="order-date" :data-id="item.id">
+						<view class="providerTitle">下单时间:{{ item.created_at }}</view>
+						<view class="status red">{{ item.status_text }}</view>
+					</view>
 
-				<view @tap="jumpDetail" class="goods-img-container" :data-id="item.id">
-					<view class="img-box"><image class="goods-img" :src="item.goods_images"></image></view>
-					<view class="content">
-						<view class="titleName">{{ item.goods_name }}</view>
-						<!-- <view class="date" style="margin-top: 5rpx;">就餐时间 : {{ item.date }}</view> -->
+					<view @tap="jumpDetail" class="goods-img-container" :data-id="item.id">
+						<view class="img-box"><image class="goods-img" :src="fileHost + item.pic"></image></view>
+						<view class="content">
+							<view class="titleName">{{ item.name }}</view>
+							<view class="date" style="margin-top: 5rpx;">价格 : ¥{{ item.price | moneyFrom }}</view>
+							<view class="date" style="margin-top: 5rpx;">地址 : {{ item.address }}</view>
+						</view>
 					</view>
 				</view>
-
-				<view class="price-box">
-					<view class="total-price">实付：¥ {{ item.pay_price }}</view>
-					<view @tap="cancelOrderTap" class="btn cancel-btn" :data-id="item.id" v-if="item.status == 5">取消订单</view>
-					<view @tap="toPayTap" class="btn topay-btn" :data-id="item.id" v-if="item.status == 5">马上付款</view>
-				</view>
-			</view>
+			</block>
 		</view>
 	</view>
 </template>
 
 <script>
-var app = getApp();
-
+import userServe from '@/libs/userServe.js';
 import order from '../../mixin/order';
+import table from '@/mixin/table.js';
+import hostConst from '@/config/hostConst.js';
 
 export default {
-	mixins: [order],
+	mixins: [order, table],
 	data() {
 		return {
-			statusType: ['全部', '待接单', '已接单'],
+			fileHost: hostConst.fileHost2,
+			statusType: ['全部', '待接单', '已接单'], //, '已完成'
 			currentType: 0,
-			tabClass: ['', '', '', '', ''],
-			orderList: [],
 			length: 0,
-			fslse: ''
+			table: {},
+			newTabel: []
 		};
 	},
-	onLoad: function(t) {},
-	onReady: function() {},
+	onLoad() {
+		this.tableInit(this);
+	},
 	onShow: function() {
-		if (app.globalData.orderShow) {
-			uni.switchTab({
-				url: '/pages/my/my'
-			});
-		} else {
-			this.getOrderList();
+		if (userServe.checkUserLogin()) {
+			this.tableRequest(this, this.getOrderList, 'reset');
 		}
 	},
 	onPullDownRefresh: function() {
-		this.getOrderList();
+		uni.stopPullDownRefresh();
+
+		if (userServe.checkUserLogin()) {
+			this.tableRequest(this, this.getOrderList, 'reset');
+		}
+	},
+	onReachBottom() {
+		this.tableRequest(this, this.getOrderList);
 	},
 	methods: {
 		statusTap: function(e) {
-			console.log('e', e);
 			this.currentType = e.currentTarget.dataset.index;
-			this.getOrderList();
+			// this.tableRequest(this, this.getOrderList, 'reset');
+			this.newTabelChange();
 		},
 
 		getOrderList: function() {
-			this.$api.user.orderList.request({ orderType: this.currentType }).then(data => {
-				this.orderList = data.result;
+			return new Promise((r, a) => {
+				this.$api.orders.get.request().then(
+					data => {
+						console.log('哈哈', data);
+						let statusList = {
+							'-1': '已取消',
+							0: '已下单',
+							1: '已接单',
+							10: '已完成'
+						};
+
+						let statusList2 = {
+							0: 1,
+							1: 2,
+							10: 3
+						};
+
+						data.map(item => {
+							item.price = parseFloat(item.price / 100);
+							item.currentType = statusList2[item.status];
+							item.status_text = statusList[item.status];
+							return item;
+						});
+
+						setTimeout(() => {
+							this.newTabelChange();
+						}, 100);
+						r(data);
+					},
+					err => {
+						a();
+					}
+				);
 			});
 		},
 
-		cancelOrderTap: function(e) {
-			let that = this;
-			this.orderCancel(e.currentTarget.dataset.id, () => {
-				app.globalData.showToast('取消成功', 'success');
-				that.getOrderList(app.globalData.order.myOrder);
+		newTabelChange() {
+			let list = this.table.data;
+			let newData = list.filter(item => {
+				if (this.currentType == 0 || item.currentType == this.currentType) {
+					return true;
+				} else {
+					return false;
+				}
 			});
-		},
 
-		orderDetail: function(t) {
-			var e = t.currentTarget.dataset.id;
-			uni.navigateTo({
-				url: '/pages/order-details/index?id=' + e
-			});
-		},
-
-		toPayTap: function(t) {
-			uni.navigateTo({
-				url: '/pages/order/pay?id=' + t.currentTarget.dataset.id
-			});
-		},
-
-		jumpDetail: function(t) {
-			uni.navigateTo({
-				url: '/pages/my/orderDetail?id=' + t.currentTarget.dataset.id
-			});
+			this.newTabel = newData;
 		}
+
+		// jumpDetail: function(t) {
+		// 	uni.navigateTo({
+		// 		url: '/pages/my/orderDetail?id=' + t.currentTarget.dataset.id
+		// 	});
+		// }
 	}
 };
 </script>
@@ -123,6 +146,9 @@ page {
 }
 
 .status-box {
+	position: sticky;
+	top: 0px;
+	left: 0rpx;
 	width: 100%;
 	height: 88rpx;
 	line-height: 88rpx;
@@ -160,20 +186,17 @@ page {
 
 .no-order {
 	width: 100%;
-	position: absolute;
-	bottom: 0;
-	top: 88rpx;
-	left: 0;
-	right: 0;
+	height: calc(100vh - 98rpx);
 	text-align: center;
-	padding-top: 203rpx;
-	background-color: #f2f2f2;
+	background-color: #fbfbfb;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 .no-order-img {
 	width: 81rpx;
 	height: 96rpx;
-	margin-bottom: 31rpx;
 }
 
 .no-order .text {
@@ -189,7 +212,7 @@ page {
 .order-list .a-order {
 	width: 100%;
 	background-color: #fff;
-	margin-bottom: 10rpx;
+	margin-bottom: 25rpx;
 }
 
 .order-list .a-order .order-date {
@@ -206,56 +229,34 @@ page {
 	color: #e64340;
 }
 
-.a-order .goods-info,
 .goods-img-container {
-	width: 720rpx;
+	box-sizing: border-box;
+	white-space: nowrap;
 	margin-left: 30rpx;
+	padding: 30rpx 0;
+	width: 720rpx;
 	border-top: 1rpx solid #eee;
 	border-bottom: 1rpx solid #eee;
-	padding: 30rpx 0;
 	display: flex;
 	align-items: center;
 }
 
-.goods-info .img-box {
-	overflow: hidden;
-	margin-right: 30rpx;
-	background-color: #f7f7f7;
-}
-
-.goods-img-container .img-box .goods-img,
-.goods-info .img-box,
-.goods-info .img-box .goods-img {
-	width: 120rpx;
-	height: 120rpx;
-}
-
-.goods-img {
-	border-radius: 20rpx;
-}
-
-.goods-info .goods-des {
-	width: 540rpx;
-	height: 78rpx;
-	line-height: 39rpx;
-	font-size: 26rpx;
-	color: #000;
-	overflow: hidden;
-}
-
-.goods-img-container {
-	height: 180rpx;
-	box-sizing: border-box;
-	white-space: nowrap;
-}
-
 .goods-img-container .img-box {
-	width: 120rpx;
-	height: 120rpx;
+	width: 300rpx;
+	height: 150rpx;
 	overflow: hidden;
 	margin-right: 20rpx;
 	background-color: #f7f7f7;
 	display: inline-block;
+}
+
+.goods-img-container .img-box .goods-img {
+	width: 300rpx;
+	height: 150rpx;
+}
+
+.goods-img {
+	border-radius: 20rpx;
 }
 
 .order-list .a-order .price-box {
@@ -299,13 +300,13 @@ page {
 }
 
 .content .titleName {
-	font-size: 30rpx;
+	font-size: 34rpx;
 	color: #000;
 }
 
 .content .date {
 	font-size: 26rpx;
-	color: #444;
+	color: #818181;
 	margin-top: 5rpx;
 }
 

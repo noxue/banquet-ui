@@ -1,6 +1,6 @@
 <template>
-	<view>
-		<view class="newHead">
+	<view style="padding: 20rpx;">
+		<!-- <view class="newHead">
 			<image :src="shop.list_img" :style="'width: 100%;height: ' + (windowHeight + 'px') + ';'"></image>
 			<view class="newName">{{ shop.name }}</view>
 			<view class="headInfo">
@@ -52,28 +52,33 @@
 		<view class="fixFoot">
 			<view class="priceInfo">{{ shop.price_info }}</view>
 			<view @tap="jumpOrder" class="saveBtn"><view class="btn">立即预定</view></view>
-		</view>
+		</view> -->
+		<u-parse :html="description"></u-parse>
+
+		<view class="introduce-img" style="margin-left: 42rpx;"><button class="button" type="default" @click="jumpOrder">立即预定</button></view>
 	</view>
 </template>
 
 <script>
 var app = getApp();
+import userServe from '@/libs/userServe.js';
+
 export default {
 	data() {
 		return {
-			partyId: '',
-			shop: {
-				list_img: '',
-				name: '',
-				title: '',
-				price_info: '',
-				menu: [],
-				imgs: [],
-				description: []
-			},
-
-			windowHeight: 600,
-			shopImges: ''
+			// partyId: '',
+			// shop: {
+			// 	list_img: '',
+			// 	name: '',
+			// 	title: '',
+			// 	price_info: '',
+			// 	menu: [],
+			// 	imgs: [],
+			// 	description: []
+			// },
+			// windowHeight: 600,
+			// shopImges: ''
+			description: ''
 		};
 	},
 	onLoad: function(a) {
@@ -82,47 +87,55 @@ export default {
 		var t = uni.getSystemInfoSync();
 		this.windowHeight = t.windowHeight - 40;
 
-		uni.showNavigationBarLoading();
-		this.getData();
+		// uni.showNavigationBarLoading();
+		this.pageDataRequest();
 	},
 	methods: {
-		getData: function(t) {
-			var that = this;
-			uni.showLoading();
-			this.$api.goods.partyInfo
-				.request({
-					partyId: this.partyId
-				})
+		pageDataRequest: function(t) {
+			this.$api.menus.detail
+				.request(
+					{
+						id: this.partyId
+					},
+					{
+						url: this.$api.menus.detail.url + this.partyId
+					}
+				)
 				.then(data => {
-					uni.setNavigationBarTitle({
-						title: data.name,
-						success: function() {
-							uni.hideNavigationBarLoading();
-						}
-					});
-
-					var images = [];
-					data.imgs.map(function(a) {
-						images.push(a.img);
-					});
-
-					this.shop = data;
-					this.shopImges = images;
+					this.description = data.description;
 				});
+			// this.$api.goods.partyInfo
+			// 	.request({
+			// 		partyId: this.partyId
+			// 	})
+			// 	.then(data => {
+			// 		uni.setNavigationBarTitle({
+			// 			title: data.name,
+			// 			success: function() {
+			// 				uni.hideNavigationBarLoading();
+			// 			}
+			// 		});
+			// 		var images = [];
+			// 		data.imgs.map(function(a) {
+			// 			images.push(a.img);
+			// 		});
+			// 		this.shop = data;
+			// 		this.shopImges = images;
+			// 	});
 		},
 
 		jumpOrder: function() {
-			var that = this;
+			if (userServe.checkUserLogin(true) === false) return false;
+			
 			uni.navigateTo({
-				url: '/pages/order/comboConfimeOrder?id=' + that.shop.id
+				url: '/pages/order/comboConfimeOrder?id=' + this.partyId
 			});
 		},
 
 		previewImg: function(a) {
-			var that = this;
 			uni.previewImage({
 				current: a.currentTarget.dataset.url,
-				urls: that.shopImges
+				urls: this.shopImges
 			});
 		}
 	}

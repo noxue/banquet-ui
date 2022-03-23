@@ -1,17 +1,15 @@
 {
     "pages": [
         "pages/index/index",
-        "pages/intro/intro",
-        "pages/intro/details",
+        "pages/cook/cookList",
+        "pages/cook/workTime",
+        "pages/cook/apply/agreement",
+        "pages/cook/apply/apply",
         "pages/login/login",
         "pages/my/my",
         "pages/address/list",
-        "pages/address/edit",
-        "pages/address/search",
         "pages/order/chefConfimeOrder",
         "pages/order/comboConfimeOrder",
-        "pages/order/pay",
-        "pages/order/balanceRecharge",
         "pages/my/useHelp",
         "pages/my/userProtocol",
         "pages/goods/shopList",
@@ -43,8 +41,8 @@
                 "selectedIconPath": "static/images/home-on.png"
             },
             {
-                "pagePath": "pages/intro/intro",
-                "text": "服务",
+                "pagePath": "pages/cook/cookList",
+                "text": "厨师",
                 "iconPath": "static/images/intro-off.png",
                 "selectedIconPath": "static/images/intro-on.png"
             },

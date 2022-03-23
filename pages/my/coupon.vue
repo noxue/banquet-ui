@@ -21,10 +21,10 @@
 
 		<view v-else class="no-order">
 			<image class="no-order-img" src="/static/images/no-order.png"></image>
-			<view class="text">暂无优惠券，快去添加吧</view>
+			<view class="text">暂无优惠券</view>
 		</view>
 
-		<view @tap="addCoupon" class="footCon">添加</view>
+		<!-- <view @tap="addCoupon" class="footCon">添加</view> -->
 	</view>
 </template>
 
@@ -52,8 +52,8 @@ export default {
 		};
 	},
 	onShow: function() {
-		this.currentType = 0;
-		this.getCouponList();
+		// this.currentType = 0;
+		// this.getCouponList();
 	},
 	methods: {
 		getCouponList: function(o) {
@@ -69,7 +69,7 @@ export default {
 		statusTap: function(o) {
 			var a = o.currentTarget.dataset.index;
 			this.currentType = a;
-			this.getCouponList();
+			// this.getCouponList();
 		},
 
 		addCoupon: function() {

@@ -1,11 +1,6 @@
 <template>
-	<view>
-		<view class="banner"><image src="https://cookwaptest.5156dujia.com/img/applyCook_t.png"></image></view>
-		<view class="city">服务城市：{{ city }} ></view>
-		<view class="title">
-			<image src="https://cookwaptest.5156dujia.com/img/applyCook_t1.png"></image>
-			<text>成为上门厨师的条件</text>
-		</view>
+	<view style="padding: 20rpx 30rpx;">
+		<view class="title"><text>成为上门厨师的条件</text></view>
 		<view class="tiaojian">
 			<text>1.申请上门厨师的用户需年满18周岁；</text>
 			<text>2.有比较擅长烹饪的菜系菜品，厨龄在1年以上；</text>
@@ -13,26 +8,30 @@
 			<text>4.拥有良好的服务精神和契约精神；</text>
 			<text>5.拥有厨师业界公认的厨师类证书以及餐厅就职经历，可提高 申请通过率。</text>
 		</view>
+		<view class="title"><text>上门厨师的保障</text></view>
+		<view class="tiaojian">
+			<text>1.平台会为您提供优质的客户资源；</text>
+			<text>2.快速收到服务佣金；</text>
+		</view>
 		<view class="title">
-			<image src="https://cookwaptest.5156dujia.com/img/applyCook_t1.png"></image>
 			<text>
 				上门厨师的承诺
-				<text>（请仔细阅读并勾选）</text>
+			
 			</text>
 		</view>
 		<view class="danxuan">
-			<label @tap.stop.prevent="checkedTap1" class="checked-lable"><radio :checked="checked1" color="#ca9f58"></radio></label>
+			<label @tap.stop.prevent="checkedTap1" class="checked-lable"><radio :checked="checked1" color="#e72528"></radio></label>
 			<view>提供给平台的本人信息皆为真实可信的</view>
 		</view>
 		<view class="danxuan">
-			<label @tap.stop.prevent="checkedTap2" class="checked-lable"><radio :checked="checked2" color="#ca9f58"></radio></label>
+			<label @tap.stop.prevent="checkedTap2" class="checked-lable"><radio :checked="checked2" color="#e72528"></radio></label>
 			<view>不做违背法律法规的事情，如有违背造成的严重后果，全部责任由厨师本人承担</view>
 		</view>
 		<view class="danxuan">
-			<label @tap.stop.prevent="checkedTap3" class="checked-lable"><radio :checked="checked3" color="#ca9f58"></radio></label>
+			<label @tap.stop.prevent="checkedTap3" class="checked-lable"><radio :checked="checked3" color="#e72528"></radio></label>
 			<view>
 				遵守
-				<text @tap="cookAgreement">《51厨师商家协议》</text>
+				<text @tap="cookAgreement">《厨师商家协议》</text>
 				、
 				<text @tap="foodCommitment">《食品安全承诺书》</text>
 				及
@@ -40,19 +39,12 @@
 				里的其他需要规则
 			</view>
 		</view>
-		<view class="title">
-			<image src="https://cookwaptest.5156dujia.com/img/applyCook_t1.png"></image>
-			<text>上门厨师的保障</text>
-		</view>
-		<view class="tiaojian">
-			<text>1.平台会为您提供优质的客户资源；</text>
-			<text>2.快速收到服务佣金；</text>
-		</view>
 		<view class="chengdan">以上是您对平台和客户需要付出的承诺，务必仔细阅读知悉,否则造成的严重后果将由您本人自行承担。</view>
 		<view :style="'width:750rpx;height:100rpx; padding-bottom:' + paddingBottom + 'px;'"></view>
-		<view @tap="checks" class="chengnuo" :style="'padding-bottom:' + paddingBottom + 'px;'">
-			<text :style="'background:' + (checked1 && checked2 && checked3 ? '#ca9f58' : '#c7c7c7;')">{{ checked1 && checked2 && checked3 ? '申请成为上门厨师' : '请阅读并勾选上门厨师的说明和承诺' }}</text>
-		</view>
+		<view style="width: 100%;height: 100rpx;"></view>
+		
+		<button @tap="checks" class="button" :style="'background:' + (checked1 && checked2 && checked3 ? '#e72528' : '#c7c7c7;')">{{ checked1 && checked2 && checked3 ? '申请成为上门厨师' : '请阅读并勾选上门厨师的说明和承诺' }}</button>
+		
 	</view>
 </template>
 
@@ -61,7 +53,6 @@ var app = getApp();
 export default {
 	data() {
 		return {
-			city: '长沙',
 			checked1: false,
 			checked2: false,
 			checked3: false,
@@ -77,30 +68,23 @@ export default {
 	methods: {
 		checkedTap1: function() {
 			var t = this.checked1;
-			this.setData({
-				checked1: !t
-			});
+			this.checked1 = !t;
 		},
 
 		checkedTap2: function() {
 			var t = this.checked2;
-			this.setData({
-				checked2: !t
-			});
+			this.checked2 = !t;
 		},
 
 		checkedTap3: function() {
 			var t = this.checked3;
-			this.setData({
-				checked3: !t
-			});
+			this.checked3 = !t;
 		},
-
 		checks: function(t) {
 			if (this.checked1 && this.checked2 && this.checked3) {
 				uni.setStorageSync('addressCook', []);
 				uni.navigateTo({
-					url: '/pages/cook/apply/cookOne'
+					url: '/pages/cook/apply/apply'
 				});
 			} else {
 				uni.showToast({
@@ -136,6 +120,18 @@ page {
 	background: #fff;
 }
 
+.button {
+	position: fixed;
+	bottom: 50rpx;
+	left: calc((750rpx - 655rpx) / 2);
+	width: 655rpx;
+	height: 90rpx;
+	background-color: #e72528;
+	border-radius: 18rpx;
+	font-size: 36rpx;
+	color: #ffffff;
+}
+
 .banner {
 	height: 300rpx;
 	margin-top: 50rpx;
@@ -158,11 +154,12 @@ page {
 .city,
 .title {
 	height: 50rpx;
-	width: 690rpx;
+	width: 100%;
+  text-align: center;
 }
 
 .title {
-	margin: 40rpx 30rpx 30rpx;
+	margin: 40rpx 0rpx 30rpx 0rpx;
 }
 
 .title image {
@@ -173,13 +170,7 @@ page {
 }
 
 .title text {
-	color: #000;
-	float: left;
-	font-size: 38rpx;
-	height: 50rpx;
-	line-height: 50rpx;
-	margin-left: 20rpx;
-	width: auto;
+  font-size: 45rpx;
 }
 
 .title text text {
@@ -190,9 +181,9 @@ page {
 
 .tiaojian {
 	height: auto;
-	margin: 20rpx 30rpx 0;
-	overflow: hidden;
+	/* margin: 0rpx 20rpx; */
 	width: 690rpx;
+	overflow: hidden;
 }
 
 .tiaojian text {
@@ -205,10 +196,12 @@ page {
 }
 
 .danxuan {
-	height: auto;
-	margin: 0 30rpx 20rpx;
-	overflow: hidden;
 	width: 690rpx;
+	height: auto;
+	margin-bottom: 10rpx;
+	overflow: hidden;
+	display: flex;
+	align-items: center;
 }
 
 .checked-lable {
@@ -233,7 +226,8 @@ page {
 	font-size: 26rpx;
 	height: auto;
 	line-height: 46rpx;
-	margin: 80rpx 30rpx 30rpx;
+	margin-top: 40rpx;
+	/* margin: 80rpx 30rpx 30rpx; */
 	overflow: hidden;
 	width: 690rpx;
 }

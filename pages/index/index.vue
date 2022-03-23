@@ -3,35 +3,22 @@
 		<view class="back" :style="'padding-top:' + css.pageTop + 'px;'" style="width: 100%;">
 			<view class="banner">
 				<swiper class="swiper-box" indicator-dots="true" autoplay="true" interval="4000" indicator-active-color="#e1251a" indicator-color="#fdfefe" style="height: 340rpx">
-					<swiper-item v-for="(item, index) in banners" :key="item.uri.params.id" style="height: 100%">
-						<image @tap="jumpShop" :data-id="item.uri.params.id" :data-url="item.uri.url" :src="item.img" class="slide-image" height="100%" width="100%"></image>
-					</swiper-item>
+					<swiper-item v-for="(item, index) in banners" style="height: 100%"><image @tap="jumpShop" :src="hostConst.fileHost + item.img" class="slide-image" height="100%" width="100%"></image></swiper-item>
 				</swiper>
 			</view>
 		</view>
 
-		<!-- 		<view class="swiper-container" style="position: relative;">
-			<swiper :autoplay="true" :indicatorDots="true" interval="3000" duration="300" indicatorActiveColor="rgba(255, 255, 255, .8)" indicatorColor="rgba(134, 151, 145, .8)" class="swiper_box">
-				<swiper-item v-for="(item, index) in banners" :key="item.uri.params.id"><image @tap="jumpShop" :data-id="item.uri.params.id" :data-url="item.uri.url" :src="item.img" class="slide-image" height="400rpx" width="750rpx"></image></swiper-item>
-			</swiper>
-		</view> -->
-
-		<!-- position:absolute;bottom: -170rpx; -->
 		<view class="buttonCon" style="width: 95%;background-color: transparent;margin-top: 15rpx;padding: 0rpx;margin-top: 30rpx;">
-			<view @tap="jumpShop" class="leftCon" data-id="" :data-url="buttons[0].uri.url" style="border-radius:20rpx;width: 47%;position: relative;height: 160rpx;">
-				<!-- <view class="imgCon"><image :src="buttons[0].icon"></image></view> -->
-				<view class="title" style="z-index: 10;position: absolute;left:30rpx;top: 30rpx;color: #FFFFFF;font-size: 45rpx;text-shadow: 1px 1px 1px #656565;">{{ buttons[0].title }}</view>
-				<image src="../../static/image/cai_2.png" style="width: 110rpx;height: 90rpx;position: absolute;right: 8rpx;bottom: 8rpx;z-index: 2;"></image>
-				<image src="../../static/image/top-bg1.png" style="width: 100%; height: 100%;position:relative;z-index: 0;border-radius: 20rpx;box-shadow: rgb(162, 208, 111) 0px 1px 2px;"></image>
+			<view @tap="toPageCustomization" class="leftCon" style="border-radius:20rpx;width: 47%;position: relative;height: 160rpx;">
+				<view class="title" style="z-index: 10;position: absolute;left:30rpx;top: 30rpx;color: #FFFFFF;font-size: 45rpx;text-shadow: 1px 1px 1px #656565;">私人定制</view>
+				<image src="/static/image/cai_2.png" style="width: 110rpx;height: 90rpx;position: absolute;right: 8rpx;bottom: 8rpx;z-index: 2;"></image>
+				<image src="/static/image/top-bg1.png" style="width: 100%; height: 100%;position:relative;z-index: 0;border-radius: 20rpx;box-shadow: rgb(162, 208, 111) 0px 1px 2px;"></image>
 			</view>
 
-			<!-- <view class="centerCon"></view> -->
-
-			<view @tap="jumpShop" class="rightCon" :data-id="party_id" :data-url="buttons[1].uri.url" style="border-radius:20rpx;width: 47%;position: relative;height: 160rpx;">
-				<!-- <view class="imgCon"><image :src="buttons[1].icon"></image></view> -->
-				<view class="title" style="z-index: 10; position: absolute;left: 30rpx;top: 30rpx;color: #FFFFFF;font-size: 45rpx;text-shadow: 1px 1px 1px #656565;">{{ buttons[1].title }}</view>
-				<image src="../../static/image/cai_1.png" style="width: 170rpx;height: 100rpx;position: absolute;right: 8rpx;bottom: 8rpx;z-index: 2;"></image>
-				<image src="../../static/image/top-bg2.png" style="width: 100%; height: 100%;position:relative;z-index: 0;border-radius: 20rpx;box-shadow: rgb(229, 99, 99) 0px 1px 2px;"></image>
+			<view @tap="jumpShop" class="rightCon" style="border-radius:20rpx;width: 47%;position: relative;height: 160rpx;">
+				<view class="title" style="z-index: 10; position: absolute;left: 30rpx;top: 30rpx;color: #FFFFFF;font-size: 45rpx;text-shadow: 1px 1px 1px #656565;">宴会套餐</view>
+				<image src="/static/image/cai_1.png" style="width: 170rpx;height: 100rpx;position: absolute;right: 8rpx;bottom: 8rpx;z-index: 2;"></image>
+				<image src="/static/image/top-bg2.png" style="width: 100%; height: 100%;position:relative;z-index: 0;border-radius: 20rpx;box-shadow: rgb(229, 99, 99) 0px 1px 2px;"></image>
 			</view>
 		</view>
 
@@ -45,9 +32,7 @@
 			</view>
 			<view class="hotList">
 				<template v-for="(item, index) in hotList">
-					<view :key="index" @tap="jumpShop" v-if="item.uri.params.id" :data-id="item.uri.params.id" :data-url="item.uri.url" :style="'background: url(' + item.img + ') no-repeat left top /100% 100%'" class="item">
-						<image :src="item.img" style="width: 100%;height: 100%;"></image>
-					</view>
+					<view :key="index" @tap="jumpShop" :style="'background: url(' + hostConst.fileHost + item.img + ') no-repeat left top /100% 100%'" class="item"><image :src="item.img" style="width: 100%;height: 100%;"></image></view>
 				</template>
 			</view>
 		</view>
@@ -58,82 +43,87 @@
 var app = getApp();
 
 import share from '@/mixin/share.js';
+import hostConst from '@/config/hostConst.js';
+import userServe from '@/libs/userServe.js';
 
 export default {
 	mixins: [share],
 	data() {
 		return {
+			hostConst,
 			css: {
 				pageTop: 0
 			},
-			indicatorDots: true,
-			autoplay: true,
-			interval: 3000,
-			duration: 300,
 			banners: [],
-			hotList: [],
-			buttons: [
-				{
-					uri: {
-						url: ''
-					},
-					title: '',
-					icon: ''
-				},
-				{
-					uri: {
-						url: ''
-					},
-					title: '',
-					icon: ''
-				}
-			],
-			party_id: null,
-			url: ''
+			hotList: []
 		};
 	},
 	onLoad: function() {},
 	onShow: function() {
-		this.getData();
+		this.pageDataRequest();
 	},
 	onPullDownRefresh: function() {
-		this.getData();
 		uni.stopPullDownRefresh();
+		this.pageDataRequest();
 	},
 	methods: {
-		getData: function() {
-			var that = this;
+		pageDataRequest: function() {
+			let that = this;
 
-			this.$api.home.request().then(data => {
-				console.log('获取到数据', data);
+			let data = {
+				banners: [
+					{
+						title: '订制家宴',
+						img: '/3.jpg',
+						uri: {
+							url: 'party/info'
+						}
+					}
+				],
+				hot: [
+					{
+						title: '家常套餐',
+						img: '/1.jpg',
+						url: {
+							url: 'party/info'
+						}
+					},
+					{
+						title: '百家宴烧烤',
+						img: '/2.jpg',
+						url: {
+							url: 'party/info'
+						}
+					}
+				]
+			};
 
-				this.banners = data.banners;
-				this.hotList = data.hot;
-				this.buttons = data.buttons;
+			this.banners = data.banners;
+			this.hotList = data.hot;
 
-				// TODO 进行调整
-				this.party_id = data.party_id;
-				app.globalData.cityId = data.city_id;
+			// this.$api.home.request().then(data => {
+			// 	this.banners = data.banners;
+			// 	this.hotList = data.hot;
+			// });
+		},
+		toPageCustomization: function() {
+			if (userServe.checkUserLogin(true) === false) return false;
+
+			uni.navigateTo({
+				url: '/pages/order/chefConfimeOrder'
 			});
 		},
-		jumpShop: function(t) {
-			if ('bespeak' == t.currentTarget.dataset.url) {
-				uni.navigateTo({
-					url: '/pages/order/chefConfimeOrder'
-				});
-			}
+		toPageSetMeal: function() {
+			if (userServe.checkUserLogin(true) === false) return false;
 
-			if ('member/list' == t.currentTarget.dataset.url) {
-				uni.navigateTo({
-					url: '/pages/order/balanceRecharge'
-				});
-			}
-
-			if (t.currentTarget.dataset.id) {
-				uni.navigateTo({
-					url: '/pages/goods/shopList?id=/' + t.currentTarget.dataset.url + '/' + t.currentTarget.dataset.id
-				});
-			}
+			uni.navigateTo({
+				url: '/pages/order/balanceRecharge'
+			});
+		},
+		jumpShop: function() {
+			uni.navigateTo({
+				url: '/pages/goods/shopList'
+			});
 		}
 	}
 };

@@ -1,21 +1,27 @@
 {
+	"easycom": {
+		"^u-(.*)": "@/uview-ui/components/u-$1/u-$1.vue"
+	},
 	"pages": [{
 			"path": "pages/index/index",
 			"style": {
 				"navigationBarTitleText": "百家宴",
 				"enablePullDownRefresh": true,
-				// "navigationStyle": "custom",
 				"backgroundTextStyle": "dark"
 			}
 		},
+
 		{
-			"path": "pages/intro/intro",
-			"style": {}
+			"path": "pages/cook/cookList",
+			"style": {
+				"navigationBarTitleText": "找厨师",
+				"enablePullDownRefresh": true
+			}
 		},
 		{
-			"path": "pages/cook/cook",
+			"path": "pages/cook/workTime",
 			"style": {
-				"navigationBarTitleText": "找厨师"
+				"navigationBarTitleText": "接单时间"
 			}
 		},
 		{
@@ -25,26 +31,10 @@
 			}
 		},
 		{
-			"path": "pages/cook/apply/cookOne",
+			"path": "pages/cook/apply/apply",
 			"style": {
 				"navigationBarTitleText": "成为厨师"
 			}
-		},
-		{
-			"path": "pages/cook/apply/cookTwo",
-			"style": {
-				"navigationBarTitleText": "申请成为厨师"
-			}
-		},
-		{
-			"path": "pages/chefList/chefList",
-			"style": {
-				"navigationBarTitleText": "厨师列表"
-			}
-		},
-		{
-			"path": "pages/intro/details",
-			"style": {}
 		},
 		{
 			"path": "pages/login/login",
@@ -56,7 +46,7 @@
 			"path": "pages/my/my",
 			"style": {
 				"navigationBarTitleText": "我的",
-				"enablePullDownRefresh": false,
+				"enablePullDownRefresh": true,
 				"navigationStyle": "custom"
 			}
 		},
@@ -67,45 +57,15 @@
 			}
 		},
 		{
-			"path": "pages/address/edit",
-			"style": {
-				"navigationBarTitleText": "常用地址"
-			}
-		},
-		{
-			"path": "pages/address/search",
-			"style": {
-				"navigationBarTitleText": "搜索地址"
-			}
-		},
-		{
 			"path": "pages/order/chefConfimeOrder",
 			"style": {
-				"navigationBarTitleText": "快速预约"
+				"navigationBarTitleText": "私人定制"
 			}
 		},
 		{
 			"path": "pages/order/comboConfimeOrder",
 			"style": {
 				"navigationBarTitleText": "套餐预约"
-			}
-		},
-		// {
-		// 	"path": "pages/order/confimeOrder",
-		// 	"style": {
-		// 		"navigationBarTitleText": "确认订单"
-		// 	}
-		// },
-		{
-			"path": "pages/order/pay",
-			"style": {
-				"navigationBarTitleText": "支付"
-			}
-		},
-		{
-			"path": "pages/order/balanceRecharge",
-			"style": {
-				"navigationBarTitleText": "会员充值"
 			}
 		},
 		{
@@ -122,13 +82,14 @@
 		},
 		{
 			"path": "pages/goods/shopList",
-			"style": {}
+			"style": {
+				"navigationBarTitleText": "套餐列表"
+			}
 		},
 		{
 			"path": "pages/goods/shopDetail",
 			"style": {}
 		},
-
 		{
 			"path": "pages/my/coupon",
 			"style": {
@@ -144,7 +105,8 @@
 		{
 			"path": "pages/my/orderList",
 			"style": {
-				"navigationBarTitleText": "我的订单"
+				"navigationBarTitleText": "我的订单",
+				"enablePullDownRefresh": true
 			}
 		},
 		{
@@ -178,7 +140,7 @@
 				"selectedIconPath": "static/images/home-on.png"
 			},
 			{
-				"pagePath": "pages/cook/cook",
+				"pagePath": "pages/cook/cookList",
 				"text": "厨师",
 				"iconPath": "static/images/intro-off.png",
 				"selectedIconPath": "static/images/intro-on.png"

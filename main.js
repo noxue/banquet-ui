@@ -1,4 +1,7 @@
 import App from './App';
+import {
+	moneyFrom
+} from './utils/util.js'
 
 // 引入全局uView
 import uView from 'uview-ui';
@@ -16,3 +19,7 @@ const app = new Vue({
 	...App
 });
 app.$mount();
+
+Vue.filter('moneyFrom', function(number){
+	return moneyFrom(number)
+})

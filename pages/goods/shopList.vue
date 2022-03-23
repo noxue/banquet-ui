@@ -1,136 +1,69 @@
+1
 <template>
 	<view>
-		<!-- 		<view class="swiper-container">
-			<swiper @change="changeImg" class="swiper_box" nextMargin="40rpx" previousMargin="40rpx" :style="'height: ' + (windowHeight + 'px') + ';'">
-				<swiper-item @tap="jumpDetail" :data-id="item.id" v-for="(item, index) in shop.items" :key="index">
-					<view class="newName">{{ item.name }}</view>
-					<view class="newPriceInfo">{{ item.price_info }}</view>
-					<image class="slide-image" :src="item.list_img" mode="aspectFill" :style="'height: ' + (windowHeight + 'px') + ';width: 650rpx;'"></image>
-				</swiper-item>
-			</swiper>
-		</view>
-		<view class="fixFoot">
-			<view class="line"></view>
-			<view class="data">{{ current }}/{{ shop.items.length }}</view>
-			<view class="line"></view>
-		</view> -->
+		<template v-if="table.data.length > 0">
+			<view v-for="(item, index) in table.data" class="card-item" @click="toPageDetails(item.id)">
+				<image class="image" :src="fileHost + item.pic"></image>
+				<view class="text-cut text-lg text-bold ui-card-fixedTitle">
+					<view class="bg-mask-bottom" style="display: flex;align-items: flex-end;font-size: 40rpx;">
+						{{ item.name }}
+						<view style="font-size: 30rpx;margin-left: 12rpx;">¥{{ item.price | moneyFrom }}</view>
+					</view>
+				</view>
+			</view>
+		</template>
+		<template v-else>
+			<view class="'cookZanwu" style="display: flex;flex-direction: column;align-items: center;justify-content: center;;">
+				<image src="https://cookwaptest.5156dujia.com/img/cookList_bj.png"></image>
+				<view>暂无套餐列表</view>
+			</view>
+		</template>
 
-<!-- 		<view class="card-item">
-			<image class="image" src="../../static/image/1.jpg"></image>
-			<view class="text">家长菜 111元</view>
-		</view>
-
-		<view class="card-item">
-			<image class="image" src="../../static/image/1.jpg"></image>
-			<view class="text">家长菜 111元</view>
-		</view>
-
-		<view class="card-item">
-			<image class="image" src="../../static/image/1.jpg"></image>
-			<view class="text">家长菜 111元</view>
-		</view> -->
-		
-	<!-- 	<view class="card-item" style="margin-top: 0rpx;">
-			<image class="image" src="../../static/mock/goods_1.png"></image>
-			<view class="text-cut text-lg text-bold ui-card-fixedTitle"><view class="bg-mask-bottom" style="display: flex;align-items: flex-end;font-size: 40rpx;">龙皇献彩卷 <view style="font-size: 30rpx;margin-left: 12rpx;">199元</view></view></view>
-		</view>
-		
-		<view class="card-item">
-			<image class="image" src="../../static/mock/goods_2.png"></image>
-			<view class="text-cut text-lg text-bold ui-card-fixedTitle"><view class="bg-mask-bottom" style="display: flex;align-items: flex-end;font-size: 40rpx;">红袍添喜庆 <view style="font-size: 30rpx;margin-left: 12rpx;">299元</view></view></view>
-		</view>
-		
-		<view class="card-item">
-			<image class="image" src="../../static/mock/goods_3.png"></image>
-			<view class="text-cut text-lg text-bold ui-card-fixedTitle"><view class="bg-mask-bottom" style="display: flex;align-items: flex-end;font-size: 40rpx;">喜鹊报佳音 <view style="font-size: 30rpx;margin-left: 12rpx;">499元</view></view></view>
-		</view>
-		</view>
-		
-		<view class="card-item">
-			<image class="image" src="../../static/mock/goods_4.png"></image>
-			<view class="text-cut text-lg text-bold ui-card-fixedTitle"><view class="bg-mask-bottom" style="display: flex;align-items: flex-end;font-size: 40rpx;">带子共欢聚 <view style="font-size: 30rpx;margin-left: 12rpx;">299元</view></view></view>
-		</view>
-		
-		<view class="card-item">
-			<image class="image" src="../../static/mock/goods_5.png"></image>
-			<view class="text-cut text-lg text-bold ui-card-fixedTitle"><view class="bg-mask-bottom" style="display: flex;align-items: flex-end;font-size: 40rpx;">群龙贺新喜 <view style="font-size: 30rpx;margin-left: 12rpx;">399元</view></view></view>
-		</view> -->
-		
-<!-- 		<view class="card-item">
-			<image class="image" src="https://cdn.idachu.com/uimgs/201906/b5b76a95cbf961e724ffe3373e4f97b6.jpg"></image>
-			<view class="text-cut text-lg text-bold ui-card-fixedTitle"><view class="bg-mask-bottom" style="display: flex;align-items: flex-end;font-size: 40rpx;">家长菜 <view style="font-size: 30rpx;margin-left: 12rpx;">199元</view></view></view>
-		</view>
-		 -->
-<!-- 		<view class="card-item">
-			<image class="image" src="../../static/image/1.jpg"></image>
-			<view class="text-cut text-lg text-bold ui-card-fixedTitle"><view class="bg-mask-bottom" style="display: flex;align-items: flex-end;font-size: 40rpx;">家长菜 <view style="font-size: 30rpx;margin-left: 12rpx;">199元</view></view></view>
-		</view>
-
-		<view class="card-item">
-			<image class="image" src="https://cdn.idachu.com/uimgs/201906/b5b76a95cbf961e724ffe3373e4f97b6.jpg"></image>
-			<view class="text-cut text-lg text-bold ui-card-fixedTitle"><view class="bg-mask-bottom" style="display: flex;align-items: flex-end;font-size: 40rpx;">家长菜 <view style="font-size: 30rpx;margin-left: 12rpx;">199元</view></view></view>
-		</view>
-		
-		<view class="card-item">
-			<image class="image" src="../../static/image/1.jpg"></image>
-			<view class="text-cut text-lg text-bold ui-card-fixedTitle"><view class="bg-mask-bottom" style="display: flex;align-items: flex-end;font-size: 40rpx;">家长菜 <view style="font-size: 30rpx;margin-left: 12rpx;">199元</view></view></view>
-		</view>
-		 -->
-
-		<view style="height: 100rpx;"></view>
+		<view style="width: 100%;height: 50rpx;"></view>
 	</view>
 </template>
 
 <script>
-var app = getApp();
+import table from '@/mixin/table.js';
+import hostConst from '@/config/hostConst.js';
+
 export default {
+	mixins: [table],
 	data() {
 		return {
-			cateId: '',
-			shop: {
-				items: []
-			},
-			current: 1,
-			windowHeight: ''
+			fileHost: hostConst.fileHost2,
+			table: {
+				data: [],
+				total: 0,
+				pageSize: 10,
+				pageNum: 1,
+				pageStatus: 0
+			}
 		};
 	},
 	onLoad: function(a) {
-		this.cateId = a.id;
-		var t = uni.getSystemInfoSync();
-		this.windowHeight = t.windowHeight - 40;
-
-		this.getData();
+		this.tableInit(this);
+		this.tableRequest(this, this.pageDataRequest, 'reset');
 	},
 	methods: {
-		getData: function(t) {
-			var that = this;
-
-			this.$api.goods.partyList
-				.request({
-					cateId: this.cateId
-				})
-				.then(data => {
-					uni.setNavigationBarTitle({
-						title: data.name,
-						success: function() {
-							uni.hideNavigationBarLoading();
-						}
-					});
-
-					this.shop = data;
-					app.globalData.dates = data.dates;
-				});
-		},
-
-		jumpDetail: function(a) {
-			uni.navigateTo({
-				url: '/pages/goods/shopDetail?id=' + a.currentTarget.dataset.id
+		pageDataRequest: function() {
+			return new Promise((r, a) => {
+				this.$api.menus.get.request(this.table).then(
+					data => {
+						data.map(item => {
+							item.price = parseFloat(item.price / 100);
+						});
+						r(data);
+					},
+					err => {
+						a();
+					}
+				);
 			});
 		},
-
-		changeImg: function(a) {
-			this.setData({
-				current: a.detail.current + 1
+		toPageDetails: function(id) {
+			uni.navigateTo({
+				url: '/pages/goods/shopDetail?id=' + id
 			});
 		}
 	}
@@ -326,46 +259,18 @@ swiper-item image {
 .ui-card-fixedTitle {
 	padding: 10rpx 20rpx;
 	position: absolute;
-	width: calc(100% - 40rpx);
+	width: 100%;
 	left: 0;
 	bottom: 0;
 	z-index: 2;
 }
 
-/* [class*='bg-mask']::before {
-	content: '';
-	border-radius: inherit;
-	width: 100%;
-	height: 100%;
-	position: absolute !important;
-	top: 0;
-	right: 0;
-	bottom: 0;
-	left: 0;
-	margin: auto;
-	background-color: rgba(0, 0, 0, 0.4);
-	z-index: 0;
-} */
-
-/* .ui-card-fixedTitle::before {
-	opacity: 0.6;
-} */
-
-/* .bg-mask-bottom {
-	padding: 20rpx 20rpx;
-	background-color: transparent;
-	background-image: -webkit-linear-gradient(rgba(0, 0, 0, 0.01), rgba(0, 0, 0, 0.618), #000);
-	background-image: linear-gradient(rgba(0, 0, 0, 0.01), rgba(0, 0, 0, 0.618), #000);
-} */
-
 .text-cut {
 	text-overflow: ellipsis;
 	white-space: nowrap;
 	overflow: hidden;
-	
+
 	color: #fff;
-	background-color: rgba(0,0,0,0.2);
-	/* background-image: -webkit-linear-gradient(rgba(0, 0, 0, 0.01), rgba(0, 0, 0, 0.618), #000); */
-	/* background-image: linear-gradient(rgba(0, 0, 0, 0.01), rgba(0, 0, 0, 0.3), #7a7a7a); */
+	background-color: rgba(0, 0, 0, 0.2);
 }
 </style>

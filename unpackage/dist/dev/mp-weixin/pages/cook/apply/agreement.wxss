@@ -2,6 +2,17 @@
 page {
 	background: #fff;
 }
+.button {
+	position: fixed;
+	bottom: 50rpx;
+	left: calc((750rpx - 655rpx) / 2);
+	width: 655rpx;
+	height: 90rpx;
+	background-color: #e72528;
+	border-radius: 18rpx;
+	font-size: 36rpx;
+	color: #ffffff;
+}
 .banner {
 	height: 300rpx;
 	margin-top: 50rpx;
@@ -21,10 +32,11 @@ page {
 .city,
 .title {
 	height: 50rpx;
-	width: 690rpx;
+	width: 100%;
+  text-align: center;
 }
 .title {
-	margin: 40rpx 30rpx 30rpx;
+	margin: 40rpx 0rpx 30rpx 0rpx;
 }
 .title image {
 	float: left;
@@ -33,13 +45,7 @@ page {
 	width: 48rpx;
 }
 .title text {
-	color: #000;
-	float: left;
-	font-size: 38rpx;
-	height: 50rpx;
-	line-height: 50rpx;
-	margin-left: 20rpx;
-	width: auto;
+  font-size: 45rpx;
 }
 .title text text {
 	float: right;
@@ -48,9 +54,9 @@ page {
 }
 .tiaojian {
 	height: auto;
-	margin: 20rpx 30rpx 0;
-	overflow: hidden;
+	/* margin: 0rpx 20rpx; */
 	width: 690rpx;
+	overflow: hidden;
 }
 .tiaojian text {
 	color: #333;
@@ -61,10 +67,12 @@ page {
 	width: 690rpx;
 }
 .danxuan {
-	height: auto;
-	margin: 0 30rpx 20rpx;
-	overflow: hidden;
 	width: 690rpx;
+	height: auto;
+	margin-bottom: 10rpx;
+	overflow: hidden;
+	display: flex;
+	align-items: center;
 }
 .checked-lable {
 	float: left;
@@ -85,7 +93,8 @@ page {
 	font-size: 26rpx;
 	height: auto;
 	line-height: 46rpx;
-	margin: 80rpx 30rpx 30rpx;
+	margin-top: 40rpx;
+	/* margin: 80rpx 30rpx 30rpx; */
 	overflow: hidden;
 	width: 690rpx;
 }

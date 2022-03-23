@@ -11,27 +11,29 @@
 const formal = {
 	// 配置标识,会根据标识弹窗
 	hostType: 'formal',
-
+	
 	// 服务器主域名(非api,可能某些特殊情况下会用到)
-	host: 'https://www.baidu.com',
+	host: 'https://api.b.pbootcms.tv',
 
 	// 服务器api域名(api域名,接口一般使用这个)
-	apiHost: 'https://www.baidu.com/api',
+	apiHost: 'https://api.b.pbootcms.tv/api',
 
 	// 文件服务器主域名(相对图片添加路径)
-	fileHost: 'https://www.baidu.com',
+	fileHost: 'http://image.noxue.com/baijiayan',
+
+	fileHost2: 'https://api.b.pbootcms.tv/static',
 
 	// 上传文件服务器主域名
-	upFileHost: 'https://www.baidu.com',
+	upFileHost: 'https://api.b.pbootcms.tv/api/upload',
+
+	// webSoer服务器
+	webSocketHost: '',
 
 	// 前端出现错误时进行提交的url,全域名
 	errorUrl: '',
 
 	// 用户行为日志上传url
 	userBehaviorLog: '',
-
-	// webSoer服务器
-	webSocketHost: 'wss://www.baidu.com/wss/',
 }
 
 /**
@@ -39,28 +41,30 @@ const formal = {
  */
 const test = {
 	// 配置标识,会根据标识弹窗
-	hostType: 'test',
+	hostType: 'formal',
 
 	// 服务器主域名(非api,可能某些特殊情况下会用到)
-	host: 'http://shopv6.admin.com',
+	host: 'http://www.baidu.com',
 
 	// 服务器api域名(api域名,接口一般使用这个)
-	apiHost: 'http://shopv6.admin.com/api',
+	apiHost: 'http://127.0.0.1:8080/api',
 
 	// 文件服务器主域名(相对图片添加路径)
-	fileHost: 'http://shopv6.admin.com',
+	fileHost: 'http://image.noxue.com/baijiayan',
+
+	fileHost2: 'http://127.0.0.1:8080/static',
 
 	// 上传文件服务器主域名
-	upFileHost: 'http://shopv6.admin.com',
+	upFileHost: 'http://127.0.0.1:8080/api/',
+
+	// webSoer服务器
+	webSocketHost: '',
 
 	// 前端出现错误时进行提交的url,全域名
 	errorUrl: '',
 
 	// 用户行为日志上传url
 	userBehaviorLog: '',
-
-	// webSoer服务器
-	webSocketHost: 'wss://www.baidu.com/wss/',
 }
 
 module.exports = formal;

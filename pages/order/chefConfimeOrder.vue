@@ -1,382 +1,254 @@
 <template>
-	<view class="container">
-		<form @submit="bindSave" :reportSubmit="true">
-			<view class="tipTitle">选择服务信息</view>
-			<view class="addressInfo">
-				<view @tap="addAddress" class="addresss">
-					<view v-if="!addressesSelect.id">选择服务地址</view>
-					<view class="addressContent" v-else>
-						<view>
-							{{ addressesSelect.name }}
-							<text class="phone">{{ addressesSelect.phone }}</text>
-						</view>
-						<view class="doorNumber">{{ addressesSelect.community }}{{ addressesSelect.door_number }}</view>
-					</view>
+	<view class="car-assessment-reserve flex-column-start-center">
+		<view class="user-content">
+			<view class="user-title">基础信息</view>
+			<view class="user-ul">
+				<view class="user-li flex-row-start-center">
+					<view class="label flex-row flex-shrink-0"><view class="text-align-last flex-1">联系人</view></view>
+					<view class="value"><u-input v-model="form.name" placeholder="请输入联系人" height="40" maxlength="50"></u-input></view>
 				</view>
-				<view class="dateCon">
-					<picker @change="bindMultiPickerChange" @columnchange="bindMultiPickerColumnChange" mode="multiSelector" :range="multiArray" :value="multiIndex">
-						<view class="picker">{{ multiArray[0][multiIndex[0]] }} {{ multiArray[1][multiIndex[1]] }}</view>
-					</picker>
+				<view class="user-li flex-row-start-center">
+					<view class="label flex-row flex-shrink-0"><view class="text-align-last flex-1">联系电话</view></view>
+					<view class="value"><u-input v-model="form.phone" placeholder="请输入联系电话" height="40" maxlength="50"></u-input></view>
 				</view>
+				<view class="user-li flex-row-start-center">
+					<view class="label flex-row flex-shrink-0"><view class="text-align-last flex-1">用餐日期</view></view>
+					<view class="value"><u-input v-model="form.datetime" @click="datetimeModal.show = true" placeholder="请输入用餐日期" disabled height="40" maxlength="50"></u-input></view>
+				</view>
+				<view class="user-li flex-row-start-center">
+					<view class="label flex-row flex-shrink-0"><view class="text-align-last flex-1">用餐人数</view></view>
+					<view class="value"><u-input v-model="form.number_of_people" @click="numberModal.show = true" disabled placeholder="请输入用餐人数" height="40" maxlength="11"></u-input></view>
+				</view>
+				<view class="user-li flex-row-start-center">
+					<view class="label flex-row flex-shrink-0"><view class="text-align-last flex-1">用餐地址</view></view>
+					<view class="value"><u-input v-model="form.address" placeholder="请输入用餐地址" height="40" maxlength="50"></u-input></view>
+				</view>
+				<!-- 	<view class="user-li flex-row-start-center">
+						<view class="label flex-row flex-shrink-0"><view class="text-align-last flex-1">详细地址</view></view>
+						<view class="value"><u-input v-model="form.address" placeholder="请输入详细地址" height="40" maxlength="50"></u-input></view>
+					</view> -->
 			</view>
-			<view class="tipTitle">选择套餐</view>
-			<view class="setMeals">
-				<picker @change="bindPickerChange" :range="mealArray" rangeKey="namePrice" :value="mealIndex">
-					<view class="picker">{{ mealArray[mealIndex].namePrice }}</view>
-				</picker>
-			</view>
-			<view class="tipTitle">备注</view>
-			<view class="markCon"><textarea name="memo" placeholder="川湘鲁粤苏闽浙徽吃哪个?酸甜苦辣冷热咸香好哪口?" :value="memo"></textarea></view>
-			<view class="fixFoot">
-				<view class="tips">—— 稍后将有专员联系 ——</view>
-				<button class="saveBtn" formType="submit" type="warn">提交</button>
-			</view>
-		</form>
+		</view>
+
+		<view class="user-content">
+			<view class="user-title">其他备注</view>
+			<view class="user-ul"><u-input type="textarea" :border="true"></u-input></view>
+		</view>
+
+		<!-- 宣传图 -->
+		<view class="user-content" style="padding: 0rpx;"><image :src="hostConst.fileHost + '/1.jpg'" style="width: 100%;"></image></view>
+
+		<view style="width: 100%;height: 200rpx;"></view>
+		<view class="introduce-img"><button class="button" type="default" @click="submit">提交</button></view>
+		<u-keyboard v-model="numberModal.show" mode="number" :dot-enabled="false" @change="numberModalChange" @backspace="numberModalBackspace"></u-keyboard>
+		<u-picker v-model="datetimeModal.show" mode="time" :params="datetimeModal.params" @confirm="datetimeChange" max-date="2050-01-01" safe-area-inset-bottom></u-picker>
 	</view>
 </template>
 
 <script>
-var app = getApp();
+import { isEmpty } from '@/libs/utils.js';
+import hostConst from '@/config/hostConst.js';
+import uInput from '@/uview-ui/components/u-input/u-input.vue';
+import uUpload from '@/uview-ui/components/u-upload/u-upload.vue';
+import uPicker from '@/uview-ui/components/u-picker/u-picker.vue';
+import uIcon from '@/uview-ui/components/u-icon/u-icon.vue';
+import dataValidation from '@/utils/dataValidation.js';
 
 /**
- * 厨师确认订单
+ * [通用版]
  */
 export default {
+	name: 'cookOne',
+	components: { uInput, uUpload, uPicker,uIcon },
 	data() {
 		return {
-			package_type: '1', // 商品类型
-			multiArray: [],
-			multiIndex: [0, 0],
-			mealArray: [],
-			mealIndex: 0,
-			memo: null,
-			addresses: [], // 地址列表
-			addressesSelect: {
-				// 当前选择地址信息
-				community: '',
-				door_number: '',
+			hostConst,
+			numberModal: {
+				show: false
+			},
+			datetimeModal: {
+				show: false,
+				params : {
+					year: true,
+					month: true,
+					day: true,
+					hour: true,
+					minute: true,
+					second: true,
+					timestamp: true, // 1.3.7版本提供
+				}
+			},
+			form: {
 				name: '',
-				phone: ''
+				phone: '',
+				datetime: '',
+				number_of_people: '',
+				address: ''
 			}
 		};
 	},
-	packages: {}, // 菜品
-	work_days: {}, // 时间段
-	package_prices: {}, // 菜品+时间段 对应的价格
-	onShow: function() {
-		this.getBespeakInfo();
-		this.getInfoDetail();
+	onLoad() {
+		this.pageDataRequest();
 	},
 	methods: {
-		// 获取预约信息
-		getBespeakInfo: function() {
-			let that = this;
-			this.$api.goods.bespeakInfo.request().then(data => {
-				that.packages = data.quick.packages;
-				that.package_prices = data.quick.package_prices;
-				that.work_days = data.quick.work_days;
-				var i = [[], []];
-
-				for (var s in that.package_prices) {
-					i[0].push(s);
-				}
-
-				this.multiArray = i;
-				that.resetTime();
+		pageDataRequest() {
+			this.$api.users.me.request().then(data => {
+				this.form.name = data.name;
+				this.form.phone = data.phone;
+				this.form.address = data.address;
 			});
 		},
-
-		// 获取用户最新消息
-		getInfoDetail: function() {
-			var that = this;
-			this.$api.user.info.request().then(data => {
-				// 处理地址数据
-				let addresses = data.addresses.length > 0 ? data.addresses : [];
-				this.addresses = addresses;
-				addresses.forEach(item => {
-					if (item.is_default == 1) this.addressesSelect = item;
-				});
-			});
+		numberModalBackspace(e) {
+			let number = this.form.number_of_people;
+			this.form.number_of_people = number.slice(0, number.length - 1);
 		},
-
-		bindMultiPickerChange: function(a) {
-			this.setData({
-				multiIndex: a.detail.value
-			});
+		numberModalChange(e) {
+			this.form.number_of_people = this.form.number_of_people + '' + e;
 		},
-
-		bindMultiPickerColumnChange: function(a) {
-			var t = {
-				multiArray: this.multiArray,
-				multiIndex: this.multiIndex
-			};
-
-			switch (((t.multiIndex[a.detail.column] = a.detail.value), a.detail.column)) {
-				case 0:
-					this.resetTime();
-					break;
-
-				case 1:
-					this.resetPrice();
-			}
-
-			this.setData(t);
+		datetimeChange(e) {
+			this.form.datetime = `${e.year}-${e.month}-${e.day} ${e.hour}:${e.minute}:${e.second}`;
 		},
-
-		// 重置价格
-		resetPrice: function() {
-			var a = this.multiArray[0][this.multiIndex[0]];
-			var t = this.multiArray[1][this.multiIndex[1]];
-			var e = [];
-			for (var i in this.packages[a]) {
-				e.push({
-					id: this.packages[a][i].id,
-					date: a + ' ' + t,
-					namePrice: this.packages[a][i].name + '/' + this.package_prices[a][t][this.packages[a][i].id] + '元'
+		submit() {
+			let check = dataValidation.validation(
+				{
+					name: '联系人,r',
+					phone: '手机号,r,mobile',
+					datetime: '用餐时间,r',
+					number_of_people: '用餐人数,r,nubmer',
+					address: '用餐地址,r'
+				},
+				this.form
+			);
+			if (check.flag === false) {
+				return uni.showToast({
+					icon: 'none',
+					title: check.msg
 				});
 			}
 
-			e[this.mealIndex] || (this.mealIndex = 0);
-			this.setData({
-				mealArray: e,
-				mealIndex: this.mealIndex
-			});
-		},
-
-		// 重置时间
-		resetTime: function() {
-			var a = [];
-			var t = this.multiArray[0][this.multiIndex[0]];
-			var e = this.multiArray[1][this.multiIndex[1]];
-			a = this.work_days[t];
-			this.multiArray[1] = a;
-			this.package_prices[t][e] || (this.multiIndex[1] = 0);
-			this.setData({
-				multiArray: this.multiArray,
-				multiIndex: this.multiIndex
-			});
-			this.resetPrice();
-		},
-
-		bindPickerChange: function(a) {
-			this.setData({
-				mealIndex: a.detail.value
-			});
-		},
-
-		// 提交订单
-		bindSave: function(t) {
-			console.log(t);
-			var that = this;
-			var memo = t.detail.value.memo;
-
-			if (!this.addressesSelect.id) return this.prompt('请选择地址');
-
-			let params = {
-				date: this.multiArray[0][this.multiIndex[0]] + ' ' + this.multiArray[1][this.multiIndex[1]],
-				package: this.mealArray[this.mealIndex].id,
-				package_type: this.package_type,
-				memo: memo,
-				addressesId: this.addressesSelect.id,
-				app: 13
-			};
-
-			this.$api.order.save.request(params).then(data => {
-				uni.navigateTo({
-					url: '/pages/order/pay?id=' + data.orderId
-				});
-			});
-		},
-
-		addAddress: function() {
-			uni.navigateTo({
-				url: '/pages/address/list'
-			});
-		},
-
-		prompt: function(a) {
-			uni.showModal({
-				title: '提示',
-				content: a,
-				showCancel: false,
-				confirmText: '知道了',
-				success: function(a) {}
+			console.log('提交订单', this.form);
+			this.form.number_of_people = parseInt(this.form.number_of_people);
+			this.$api.reservations.post.request(this.form).then(data => {
+				setTimeout(() => {
+					uni.navigateBack({
+						delta: 1
+					});
+				}, 2000);
 			});
 		}
 	}
 };
 </script>
+
 <style>
 page {
-	height: 100%;
+	background-color: #fcfcfc;
+}
+</style>
+<style scoped lang="scss">
+.car-assessment-reserve {
+	.banner-content {
+		margin-top: 22rpx;
+	}
+
+	.user-content {
+		margin-top: 30rpx;
+		padding-bottom: 30rpx;
+		width: 705rpx;
+		background-color: #ffffff;
+		border-radius: 20rpx;
+
+		.user-title {
+			padding-left: 25rpx;
+			height: 90rpx;
+			font-size: 30rpx;
+			line-height: 90rpx;
+			color: #151515;
+		}
+
+		.user-desc {
+			padding-left: 25rpx;
+			font-size: 24rpx;
+			color: #a6a6a6;
+		}
+
+		.user-ul {
+			padding: 0rpx 40rpx;
+
+			.user-li {
+				padding: 20rpx 0rpx;
+				border-bottom: 2rpx solid #f9f9f9;
+
+				.label {
+					margin-left: 10rpx;
+					width: 120rpx;
+
+					.text-align-last {
+						text-align-last: justify;
+					}
+
+					&::after {
+						content: ':';
+					}
+				}
+
+				.value {
+					margin-left: 80rpx;
+				}
+			}
+		}
+	}
+
+	.data-content {
+		margin-top: 20rpx;
+		padding: 0rpx 40rpx;
+		width: 100%;
+		background-color: #fff;
+
+		.data-title {
+			height: 57rpx;
+			font-size: 30rpx;
+			font-weight: bold;
+			color: #151515;
+		}
+
+		.data-ul {
+			.transfer-title {
+				margin-top: 30rpx;
+				margin-bottom: 20rpx;
+				text-align: center;
+				font-size: 30rpx;
+				color: #151515;
+			}
+
+			.data-item {
+				margin-top: 35rpx;
+
+				.upload-image {
+					width: 669rpx;
+					height: 379rpx;
+					background-color: #fff9fa;
+					border-radius: 20rpx;
+				}
+			}
+		}
+	}
+
+	.upload-image {
+		width: 100%;
+		height: 379rpx;
+		background-color: #fff9fa;
+		border-radius: 20rpx;
+	}
 }
 
-.container,
-page {
-	background-color: #f5f5f9;
-}
-
-.container {
-	justify-content: normal;
-}
-
-.tipTitle {
-	font-size: 24rpx;
-	color: #989898;
-	text-align: center;
-	margin: 20rpx 0;
-}
-
-.addressInfo {
-	display: flex;
-	margin: 0 30rpx;
+.u-upload {
+	flex-wrap: wrap;
 	align-items: center;
-}
-
-.addresss {
-	height: 120rpx;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
-
-.addresss,
-.dateCon {
-	flex: 1;
-	text-align: center;
-	color: red;
-	font-size: 26rpx;
-	background-color: #fff;
-	border-radius: 6px;
-}
-
-.dateCon {
-	line-height: 120rpx;
-}
-
-.addressContent .phone,
-.dateCon {
-	margin-left: 20rpx;
-}
-
-.addressContent .doorNumber {
 	margin-top: 10rpx;
 }
 
-.setMeals {
-	border-radius: 6px;
-	line-height: 150rpx;
-	text-align: center;
-	font-size: 28rpx;
-}
-
-.markCon,
-.setMeals {
-	background-color: #fff;
-	margin: 0 30rpx;
-}
-
-.form-box {
-	width: 100%;
-	background-color: #fff;
-	margin-bottom: 10rpx;
-}
-
-.row-wrap {
-	height: 88rpx;
-	line-height: 88rpx;
-}
-
-.row-wrap,
-.row-wrap2 {
-	width: 720rpx;
-	padding-left: 30rpx;
-	border-bottom: 1rpx solid #eee;
-	display: flex;
-	font-size: 28rpx;
-}
-
-.row-wrap2 {
-	min-height: 88rpx;
-}
-
-.bg_f5 {
-	background-color: #f5f5f5;
-	color: #e64340;
-}
-
-.row-wrap .label {
-	width: 160rpx;
-	color: #000;
-}
-
-.row-wrap .label-right {
+.value {
 	flex: 1;
-	height: 88rpx;
-	line-height: 88rpx;
-}
-
-.row-wrap .label-right input {
-	height: 100%;
-	font-size: 28rpx;
-	padding-right: 30rpx;
-}
-
-.row-wrap .right-box {
-	margin-right: 30rpx;
-}
-
-.cancel-btn,
-.save-btn {
-	width: 690rpx;
-	height: 80rpx;
-	line-height: 80rpx;
-	text-align: center;
-	margin-top: 30rpx;
-	border-radius: 6rpx;
-	box-sizing: border-box;
-}
-
-.save-btn {
-	background-color: #e64340;
-	color: #fff;
-	margin-bottom: 80rpx;
-}
-
-button[type='default'] {
-	background-color: #fff;
-	color: #000;
-}
-
-picker {
-	height: 100%;
-	flex: 1;
-}
-
-textarea {
-	width: 630rpx;
-	height: 150rpx;
-	font-size: 28rpx;
-	color: red;
-	padding: 30rpx 30rpx 20rpx;
-}
-
-.fixFoot {
-	position: fixed;
-	bottom: 0;
-	left: 0;
-	width: 100%;
-}
-
-.fixFoot .tips {
-	text-align: center;
-	font-size: 26rpx;
-	color: #989898;
-	margin-bottom: 5rpx;
-}
-
-.fixFoot .saveBtn {
-	border-radius: 0;
-	background-color: red;
 }
 </style>

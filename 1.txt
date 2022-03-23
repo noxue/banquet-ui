@@ -1,0 +1,22 @@
+
+github.com/noxue/banquet
+
+接口文档
+https://docs.apipost.cn/preview/ead61e0247392b8c/3260043d9377f82e
+
+新的后台是  https://admin.b.pbootcms.tv/
+
+账号 admin  密码 123456
+接口地址 https://api.b.pbootcms.tv
+后台   https://admin.b.pbootcms.tv/
+
+中间加了个b
+
+
+
+后台   https://m.pbootcms.tv/
+
+宝塔地址：
+http://101.34.139.213:8888/admin888
+test
+admin888

@@ -7,6 +7,10 @@ page {
 	width: 100%;
 }
 .status-box {
+	position: -webkit-sticky;
+	position: sticky;
+	top: 0px;
+	left: 0rpx;
 	width: 100%;
 	height: 88rpx;
 	line-height: 88rpx;
@@ -40,19 +44,16 @@ page {
 }
 .no-order {
 	width: 100%;
-	position: absolute;
-	bottom: 0;
-	top: 88rpx;
-	left: 0;
-	right: 0;
+	height: calc(100vh - 98rpx);
 	text-align: center;
-	padding-top: 203rpx;
-	background-color: #f2f2f2;
+	background-color: #fbfbfb;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 .no-order-img {
 	width: 81rpx;
 	height: 96rpx;
-	margin-bottom: 31rpx;
 }
 .no-order .text {
 	font-size: 28rpx;
@@ -65,7 +66,7 @@ page {
 .order-list .a-order {
 	width: 100%;
 	background-color: #fff;
-	margin-bottom: 10rpx;
+	margin-bottom: 25rpx;
 }
 .order-list .a-order .order-date {
 	padding: 0 30rpx;
@@ -79,50 +80,31 @@ page {
 	font-size: 26rpx;
 	color: #e64340;
 }
-.a-order .goods-info,
 .goods-img-container {
-	width: 720rpx;
+	box-sizing: border-box;
+	white-space: nowrap;
 	margin-left: 30rpx;
+	padding: 30rpx 0;
+	width: 720rpx;
 	border-top: 1rpx solid #eee;
 	border-bottom: 1rpx solid #eee;
-	padding: 30rpx 0;
 	display: flex;
 	align-items: center;
 }
-.goods-info .img-box {
-	overflow: hidden;
-	margin-right: 30rpx;
-	background-color: #f7f7f7;
-}
-.goods-img-container .img-box .goods-img,
-.goods-info .img-box,
-.goods-info .img-box .goods-img {
-	width: 120rpx;
-	height: 120rpx;
-}
-.goods-img {
-	border-radius: 20rpx;
-}
-.goods-info .goods-des {
-	width: 540rpx;
-	height: 78rpx;
-	line-height: 39rpx;
-	font-size: 26rpx;
-	color: #000;
-	overflow: hidden;
-}
-.goods-img-container {
-	height: 180rpx;
-	box-sizing: border-box;
-	white-space: nowrap;
-}
 .goods-img-container .img-box {
-	width: 120rpx;
-	height: 120rpx;
+	width: 300rpx;
+	height: 150rpx;
 	overflow: hidden;
 	margin-right: 20rpx;
 	background-color: #f7f7f7;
 	display: inline-block;
+}
+.goods-img-container .img-box .goods-img {
+	width: 300rpx;
+	height: 150rpx;
+}
+.goods-img {
+	border-radius: 20rpx;
 }
 .order-list .a-order .price-box {
 	position: relative;
@@ -160,12 +142,12 @@ page {
 	color: #e64340;
 }
 .content .titleName {
-	font-size: 30rpx;
+	font-size: 34rpx;
 	color: #000;
 }
 .content .date {
 	font-size: 26rpx;
-	color: #444;
+	color: #818181;
 	margin-top: 5rpx;
 }
 .providerImg {

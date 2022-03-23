@@ -56,35 +56,184 @@ const api = {
 		data: {},
 		apiType: 'default',
 		method: 'GET',
-		openMock: true,
 		request: function(data) {
 			return promise(this, data);
 		}
 	},
-	applet: {
-		slideshow: {
-			name: '[配置]轮播图',
-			api: 'applet/slideshow',
-			url: hostConst.apiHost + '/applet/slideshow',
+	reservations: {
+		post: {
+			name: '[预约]预约订单',
+			api: 'reservations/post',
+			url: hostConst.apiHost + '/reservations',
 			data: {},
-			apiType: 'default',
+			method: 'POST',
+			showSuccessLoading: true,
+			showSuccessLoadingMessage: '预约成功',
+			request: function(data) {
+				return promise(this, data);
+			}
+		},
+		get: {
+			name: '[预约]预约订单',
+			api: 'reservations/get',
+			url: hostConst.apiHost + '/reservations',
+			data: {},
 			method: 'GET',
-			openMock: true,
+			showSuccessLoading: true,
+			showSuccessLoadingMessage: '预约成功',
 			request: function(data) {
 				return promise(this, data);
 			}
 		}
 	},
-	login: {
-		wxcode: {
-			name: '[登录][微信]微信code',
-			api: 'login/wxcode',
-			url: hostConst.apiHost + '/login/wxcode',
+	orders: {
+		get: {
+			name: '[订单]订单列表',
+			api: 'orders/get',
+			url: hostConst.apiHost + '/orders',
 			data: {},
-			method: 'POST',
-			openMock: true,
+			method: 'GET',
 			request: function(data) {
 				return promise(this, data);
+			}
+		},
+		post: {
+			name: '[订单]订单下单',
+			api: 'orders/post',
+			url: hostConst.apiHost + '/orders',
+			data: {},
+			method: 'POST',
+			showSuccessLoading: true,
+			showSuccessLoadingMessage: '下单成功',
+			request: function(data) {
+				return promise(this, data);
+			}
+		}
+	},
+	menus: {
+		get: {
+			name: '[套餐]列表数据',
+			api: 'menus/get',
+			url: hostConst.apiHost + '/menus',
+			data: {},
+			method: 'GET',
+			request: function(data) {
+				return promise(this, data);
+			}
+		},
+		detail: {
+			name: '[套餐]套餐详情',
+			api: 'menus/detail',
+			url: hostConst.apiHost + '/menus/',
+			data: {},
+			method: 'GET',
+			request: function(data, config) {
+				return promise(this, data, config);
+			}
+		},
+	},
+	cooks: {
+		me: {
+			name: '[厨师]获取厨师详情',
+			api: 'cooks/me',
+			url: hostConst.apiHost + '/cooks/me',
+			data: {},
+			method: 'GET',
+			request: function(data) {
+				return promise(this, data);
+			}
+		},
+		post: {
+			name: '[厨师]添加',
+			api: 'cooks/post',
+			url: hostConst.apiHost + '/cooks',
+			data: {
+				"name": "姓名",
+				"phone": "手机号", // 注：前端界面上为了提高体验，可以自动把个人信息中的手机号填进去
+				"sex": 1, //数字类型，可选，默认为 0 未知， 1 男，2 女
+				"marry_status": 1, // 数字类型，可选， 婚姻状态：0 未知，1 未婚，2 已婚
+				"origin_address": "户籍所在地(可选)",
+				"address": "常驻地址(可选)",
+				"photo": "真人照片", // 上传文件后返回的相对路径
+				"identify_card1": "身份证正面", // 上传文件后返回的相对路径
+				"identify_card2": "身份证反面", // 上传文件后返回的相对路径
+				"residence_permit": "居住证", // 上传文件后返回的相对路径
+				"description": "履历信息", // 可选，默认为空
+				"foods": "[{'pic':'1.png'},{'pic':'2.png'}]" // 可选，厨师擅长的食物列表，组装成json数组，如果没有，传 null
+			},
+			method: 'POST',
+			showSuccessLoading: true,
+			showSuccessLoadingMessage: '提交成功',
+			request: function(data) {
+				return promise(this, data);
+			}
+		},
+		get: {
+			name: '[厨师]获取列表',
+			api: 'cooks/get',
+			url: hostConst.apiHost + '/cooks',
+			data: {},
+			method: 'GET',
+			request: function(data) {
+				return promise(this, data);
+			}
+		},
+		workTime: {
+			get: {
+				name: '[厨师]获取工作时间',
+				api: 'cooks/spare_time/get',
+				url: hostConst.apiHost + '/cooks/:id/spare_time',
+				data: {},
+				method: 'GET',
+				request: function(data, config) {
+					return promise(this, data, config);
+				}
+			},
+			post: {
+				name: '[厨师]添加工作时间',
+				api: 'cooks/spare_time/post',
+				url: hostConst.apiHost + '/cooks/:id/spare_time',
+				data: {},
+				method: 'POST',
+				showSuccessLoading: true,
+				showSuccessLoadingMessage: '添加成功',
+				request: function(data, config) {
+					return promise(this, data, config);
+				}
+			}
+		},
+	},
+	login: {
+		phone: {
+			index: {
+				name: '[登录][手机][登录]发送短信验证码',
+				api: 'login/phone',
+				url: hostConst.apiHost + '/login/phone',
+				data: {
+					"phone": "",
+					"code": ""
+				},
+				method: 'POST',
+				showSuccessLoading: true,
+				showSuccessLoadingMessage: '登录成功',
+				request: function(data) {
+					return promise(this, data);
+				}
+			},
+			code: {
+				name: '[登录][手机][短信]发送短信验证码',
+				api: 'login/phone/code',
+				url: hostConst.apiHost + '/login/phone/code',
+				data: {
+					"phone": ""
+				},
+				method: 'POST',
+				showSuccessLoading: true,
+				showSuccessLoadingMessage: '发送成功',
+
+				request: function(data) {
+					return promise(this, data);
+				}
 			}
 		},
 		sendCode: {
@@ -93,7 +242,6 @@ const api = {
 			url: hostConst.apiHost + '/login/sendCode',
 			data: {},
 			method: 'POST',
-			openMock: true,
 			request: function(data) {
 				return promise(this, data);
 			}
@@ -104,376 +252,25 @@ const api = {
 			url: hostConst.apiHost + '/login/checkCode',
 			data: {},
 			method: 'POST',
-			openMock: true,
+
 			request: function(data) {
 				return promise(this, data);
 			}
 		}
 	},
-	goods: {
-		bespeakInfo: {
-			name: '[商品][预约信息]商品预约信息',
-			api: 'goods/bespeakInfo',
-			url: hostConst.apiHost + '/goods/bespeakInfo',
-			data: {},
-			apiType: 'user',
-			method: 'GET',
-			openMock: true,
-			request: function(data) {
-				return promise(this, data);
-			}
-		},
-		partyList: {
-			name: '[商品]聚会列表',
-			api: 'goods/partyList',
-			url: hostConst.apiHost + '/goods/partyList',
-			data: {
-				cateId: '' // 分类id，不传就是所有分类
-			},
-			apiType: 'user',
-			method: 'GET',
-			openMock: true,
-			request: function(data) {
-				return promise(this, data);
-			}
-		},
-		partyInfo: {
-			name: '[商品]聚会详情',
-			api: 'goods/partyInfo',
-			url: hostConst.apiHost + '/goods/partyInfo',
-			data: {
-				partyId: '' // 聚会id
-			},
-			apiType: 'user',
-			method: 'GET',
-			openMock: true,
-			request: function(data) {
-				return promise(this, data);
-			}
-		}
-	},
-	chefInfo: {
-		list: {
-			name: '[厨师]初始列表',
-			api: 'chefInfo/list',
-			url: hostConst.apiHost + '/chefInfo/list',
-			data: {
-				searchKey: '',
-				city: '',
-				latitude: 0,
-				longitude: 0,
-				pageNum: 1,
-				pageSize: 10,
-				chefSort: '',
-				startBasicFee: '',
-				endBasicFee: '',
-				minNum: '',
-				maxNum: '',
-				cookAge: 0,
-				dishStyleIdList: '',
-				distance: '',
-				userKey: '',
-				token: ''
-			},
-			apiType: 'user',
-			method: 'GET',
-			openMock: true,
-			request: function(data) {
-				return promise(this, data);
-			}
-		},
-		findDishStyle: {
-			name: '[厨师]菜类型',
-			api: 'chefInfo/findDishStyle',
-			url: hostConst.apiHost + '/chefInfo/findDishStyle',
-			data: {},
-			method: 'GET',
-			openMock: true,
-			request: function(data) {
-				return promise(this, data);
-			}
-		}
-	},
-	user: {
-		info: {
+	users: {
+		me: {
 			name: '[用户]用户信息',
-			api: 'user/info',
-			url: hostConst.apiHost + '/user/info',
+			api: 'users/me',
+			url: hostConst.apiHost + '/users/me',
 			data: {},
 			apiType: 'user',
 			method: 'GET',
-			openMock: true,
-			request: function(data) {
-				return promise(this, data);
-			}
-		},
-		balance: {
-			name: '[用户]余额信息',
-			api: 'user/balance',
-			url: hostConst.apiHost + '/user/balance',
-			data: {},
-			apiType: 'user',
-			method: 'GET',
-			openMock: true,
-			request: function(data) {
-				return promise(this, data);
-			}
-		},
-		balanceLog: {
-			name: '[用户]余额日志',
-			api: 'user/balanceLog',
-			url: hostConst.apiHost + '/user/balanceLog',
-			data: {},
-			apiType: 'user',
-			method: 'GET',
-			openMock: true,
-			request: function(data) {
-				return promise(this, data);
-			}
-		},
-		coupon: {
-			name: '[用户]优惠卷列表',
-			api: 'user/coupon',
-			url: hostConst.apiHost + '/user/coupon',
-			data: {
-				type: '', // valid 未使用 used 已使用 expired 已过期
-			},
-			apiType: 'user',
-			method: 'GET',
-			openMock: true,
-			request: function(data) {
-				return promise(this, data);
-			}
-		},
-		couponAdd: {
-			name: '[用户]添加优惠卷',
-			api: 'user/couponAdd',
-			url: hostConst.apiHost + '/user/couponAdd',
-			data: {
-				code: '', // 兑换码 
-			},
-			apiType: 'user',
-			method: 'GET',
-			openMock: true,
-			request: function(data) {
-				return promise(this, data);
-			}
-		},
-		addressInfo: {
-			name: '[用户][地址]地址详细信息',
-			api: 'user/addressInfo',
-			url: hostConst.apiHost + '/user/addressInfo',
-			data: {
-				id: '' // 地址id
-			},
-			apiType: 'user',
-			method: 'POST',
-			openMock: true,
-			request: function(data) {
-				return promise(this, data);
-			}
-		},
-		addressDefault: {
-			name: '[用户][地址]设置默认地址',
-			api: 'user/addressDefault',
-			url: hostConst.apiHost + '/user/addressDefault',
-			data: {
-				id: '' // 地址id
-			},
-			apiType: 'user',
-			method: 'POST',
-			openMock: true,
-			request: function(data) {
-				return promise(this, data);
-			}
-		},
-		addressCreate: {
-			name: '[用户][地址]新创建地址',
-			api: 'user/addressCreate',
-			url: hostConst.apiHost + '/user/addressCreate',
-			data: {
-				id: '' // 地址id
-			},
-			apiType: 'user',
-			method: 'POST',
-			openMock: true,
-			request: function(data) {
-				return promise(this, data);
-			}
-		},
-		addressSave: {
-			name: '[用户][地址]编辑/保存地址',
-			api: 'user/addressSave',
-			url: hostConst.apiHost + '/user/addressSave',
-			data: {
-				id: '' // 地址id
-			},
-			apiType: 'user',
-			method: 'POST',
-			openMock: true,
-			request: function(data) {
-				return promise(this, data);
-			}
-		},
-		addressDelete: {
-			name: '[用户][地址]设置默认地址',
-			api: 'user/addressDelete',
-			url: hostConst.apiHost + '/user/addressDelete',
-			data: {
-				id: '' // 地址id
-			},
-			apiType: 'user',
-			method: 'POST',
-			openMock: true,
-			request: function(data) {
-				return promise(this, data);
-			}
-		},
-		orderList: {
-			name: '[用户][订单列表]订单列表',
-			api: 'user/orderList',
-			url: hostConst.apiHost + '/user/orderList',
-			data: {},
-			apiType: 'user',
-			method: 'GET',
-			openMock: true,
-			request: function(data) {
-				return promise(this, data);
-			}
-		},
-		orderDetail: {
-			name: '[用户][订单列表]订单详情',
-			api: 'user/orderDetail',
-			url: hostConst.apiHost + '/user/orderDetail',
-			data: {
-				orderId: '', // 订单id
-			},
-			apiType: 'user',
-			method: 'GET',
-			openMock: true,
 			request: function(data) {
 				return promise(this, data);
 			}
 		}
 	},
-	order: {
-		save: {
-			name: '[订单]下单', // 改为create order
-			api: 'order/save',
-			url: hostConst.apiHost + '/order/save',
-			data: {},
-			apiType: 'user',
-			method: 'POST',
-			openMock: true,
-			request: function(data) {
-				return promise(this, data);
-			}
-		},
-		payDetail: {
-			name: '[订单]下单详情',
-			api: 'order/payDetail',
-			url: hostConst.apiHost + '/order/payDetail',
-			data: {},
-			apiType: 'user',
-			method: 'GET',
-			openMock: true,
-			request: function(data) {
-				return promise(this, data);
-			}
-		},
-		payConfirm: {
-			name: '[订单]支付确认',
-			api: 'order/payDetail',
-			url: hostConst.apiHost + '/order/payDetail',
-			data: {},
-			apiType: 'user',
-			method: 'POST',
-			openMock: true,
-			request: function(data) {
-				return promise(this, data);
-			}
-		},
-		pay: {
-			name: '[订单]支付',
-			api: 'order/pay',
-			url: hostConst.apiHost + '/order/pay',
-			data: {},
-			apiType: 'user',
-			method: 'POST',
-			openMock: true,
-			request: function(data) {
-				return promise(this, data);
-			}
-		},
-		cancel: {
-			name: '[订单]取消列表',
-			api: 'order/cancel',
-			url: hostConst.apiHost + '/order/cancel',
-			data: {
-				orderId: '', // 订单id
-			},
-			apiType: 'user',
-			method: 'POST',
-			openMock: true,
-			request: function(data) {
-				return promise(this, data);
-			}
-		},
-		statusList: {
-			name: '[订单]状态列表',
-			api: 'order/statusList',
-			url: hostConst.apiHost + '/order/statusList',
-			data: {
-				orderId: '', // 订单id
-			},
-			apiType: 'user',
-			method: 'GET',
-			openMock: true,
-			request: function(data) {
-				return promise(this, data);
-			}
-		},
-		balanceRechargePay: {
-			name: '[订单]余额充值支付',
-			api: 'order/balanceRechargePay',
-			url: hostConst.apiHost + '/order/balanceRechargePay',
-			data: {
-				type: '', // 卡类型
-			},
-			apiType: 'user',
-			method: 'POST',
-			openMock: true,
-			request: function(data) {
-				return promise(this, data);
-			}
-		}
-	},
-	memberCard: {
-		list: {
-			name: '[会员卡]会员卡列表',
-			api: 'memberCard/list',
-			url: hostConst.apiHost + '/memberCard/list',
-			data: {},
-			method: 'GET',
-			openMock: true,
-			request: function(data) {
-				return promise(this, data);
-			}
-		}
-	},
-	system: {
-		set: {
-			name: '[系统]配置信息',
-			api: 'system/set',
-			url: hostConst.apiHost + '/system/set',
-			data: {},
-			method: 'GET',
-			openMock: true,
-			request: function(data) {
-				return promise(this, data);
-			}
-		}
-	}
 }
 
 
@@ -482,24 +279,26 @@ const api = {
  * @param data
  * @returns {Promise}
  */
-var promise = function(config, data = {}) {
+var promise = function(object, data = {}, config) {
 
-	var config = Object.assign({}, config, data);
+	console.log('请求参数', object, data, config)
 
-	console.log('请求参数', config, data)
+	object.data = data;
+
+	if (config) object = Object.assign({}, object, config)
 
 	return new Promise(function(r, a) {
-		config.success = function(data) {
+		object.success = function(data) {
 			console.log('回调数据', data)
 			r(data);
 		};
 
-		config.codeError = function(res) {
+		object.codeError = function(res) {
 			a(res)
 		}
 
 		let abc = new requestServe();
-		abc.request(config)
+		abc.request(object)
 	});
 }
 
