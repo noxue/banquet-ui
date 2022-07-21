@@ -38,8 +38,8 @@
 		</view>
 
 		<!-- 宣传图 -->
-		<view class="user-content" style="padding: 0rpx;"><image :src="fileHost + '/1.jpg'" style="width: 100%;"></image></view>
-
+		<view class="user-content" style="padding: 0rpx;"><image :src="fileHost + '/banner_1.jpg'" style="width: 100%;"></image></view>
+		
 		<view style="width: 100%;height: 200rpx;"></view>
 		<view class="introduce-img"><button class="button" type="default" @click="submit">预约</button></view>
 
@@ -168,11 +168,6 @@ export default {
 };
 </script>
 
-<style>
-page {
-	background-color: #fcfcfc;
-}
-</style>
 <style scoped lang="scss">
 .car-assessment-reserve {
 	.banner-content {

@@ -3,18 +3,33 @@
 		"^u-(.*)": "@/uview-ui/components/u-$1/u-$1.vue"
 	},
 	"pages": [{
+			"path": "pages/ad/index",
+			"style": {
+				"navigationBarTitleText": "优厨上门",
+				"enablePullDownRefresh": true,
+				"backgroundTextStyle": "dark",
+				"navigationStyle": "custom"
+			}
+		}, {
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "百家宴",
+				"navigationBarTitleText": "优厨上门",
 				"enablePullDownRefresh": true,
-				"backgroundTextStyle": "dark"
+				"backgroundTextStyle": "dark",
+				"navigationStyle": "custom"
 			}
 		},
-
 		{
 			"path": "pages/cook/cookList",
 			"style": {
 				"navigationBarTitleText": "找厨师",
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/cook/cookDetail",
+			"style": {
+				"navigationBarTitleText": "厨师详情",
 				"enablePullDownRefresh": true
 			}
 		},
@@ -39,7 +54,8 @@
 		{
 			"path": "pages/login/login",
 			"style": {
-				"navigationBarTitleText": "登录"
+				"navigationBarTitleText": "登录",
+				"navigationStyle": "custom"
 			}
 		},
 		{
@@ -88,7 +104,9 @@
 		},
 		{
 			"path": "pages/goods/shopDetail",
-			"style": {}
+			"style": {
+				"navigationBarTitleText": "套餐列表"
+			}
 		},
 		{
 			"path": "pages/my/coupon",
@@ -125,6 +143,18 @@
 			"path": "pages/my/balance",
 			"style": {
 				"navigationBarTitleText": "会员余额"
+			}
+		},
+		{
+			"path": "pages/login/xieyi1",
+			"style": {
+				"navigationBarTitleText": "隐私保密声明"
+			}
+		},
+		{
+			"path": "pages/login/xieyi2",
+			"style": {
+				"navigationBarTitleText": "用户服务协议"
 			}
 		}
 	],
@@ -163,7 +193,7 @@
 	"globalStyle": {
 		"backgroundTextStyle": "light",
 		"navigationBarBackgroundColor": "#fff",
-		"navigationBarTitleText": "小程序名字",
+		"navigationBarTitleText": "优厨上门",
 		"navigationBarTextStyle": "black"
 	},
 	"subPackages": []

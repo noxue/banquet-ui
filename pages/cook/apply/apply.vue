@@ -1,8 +1,8 @@
 <template>
 	<view class="car-assessment-reserve flex-column-start-center" style="position: relative;">
 		<view v-if="userInfo.cook_status != 0" style="margin-top: 20rpx; width: 708rpx;padding: 16rpx 20rpx;background: rgb(189 246 228);font-size: 28rpx; color: #ff6b6b;border-radius: 10rpx;text-align: center;">
-			<view>{{ cookText }} </view>
-      <view v-if="userInfo.cook_status == 3 && this.cookMsg" style="word-break: break-all;word-wrap: break-word;">失败原因:{{this.cookMsg}}</view>
+			<view>{{ cookText }}</view>
+			<view v-if="userInfo.cook_status == 3 && this.cookMsg" style="word-break: break-all;word-wrap: break-word;">失败原因:{{ this.cookMsg }}</view>
 		</view>
 
 		<view v-if="userInfo.cook_status == 1 || userInfo.cook_status == 2" style="width: 100%;height: 100%;position: absolute;top: 0;left: 0;z-index: 100;"></view>
@@ -38,6 +38,13 @@
 					<view class="label flex-row flex-shrink-0"><view class="text-align-last flex-1">履历信息</view></view>
 					<view class="value"><u-input v-model="form.description" type="textarea" placeholder="请输入履历信息"></u-input></view>
 				</view>
+				<view class="user-li flex-row-start-center">
+					<view class="label flex-row flex-shrink-0"><view class="text-align-last flex-1">擅长菜系</view></view>
+					<view class="value flex-row">
+						<view class="flex-1"><u-tag style="margin-left: 15rpx;margin-top: 15rpx;" v-for="(item, index) in formData.food_types" :key="index" :text="item" type="info" :closeable="true" @close="cookStyleClose(index)" /></view>
+						<u-icon name="plus-circle" size="35" style="color: #ff9090;" @click="cookStyleOpen"></u-icon>
+					</view>
+				</view>
 			</view>
 		</view>
 
@@ -71,8 +78,8 @@
 		</view>
 
 		<view class="user-content">
-			<view class="user-title">居住证</view>
-			<view class="user-desc">非必填/仅用作资料审核，不在页面显示</view>
+			<view class="user-title">厨师证</view>
+			<view class="user-desc">非必填</view>
 			<view class="user-ul">
 				<view class="upload-image" style="margin-top: 20rpx;">
 					<u-upload ref="residence_permit" width="605rpx" height="340rpx" :custom-btn="true" max-count="1" :action="uploadImgUrl" :header="header" :file-list="formData.residence_permit">
@@ -81,6 +88,16 @@
 				</view>
 			</view>
 		</view>
+
+		<!-- 
+		<view class="user-content">
+			<view class="user-title">擅长菜系</view>
+			<view class="user-desc">请添加接单时间，方便推荐工作岗位</view>
+			<view class="user-ul">
+				<veiw style="width: 100%;height: 200rpx;display: flex;align-items: center;justify-content: center;">审核通过后添加</veiw>
+			</view>
+		</view> 
+		-->
 
 		<view class="user-content">
 			<view class="user-title required2">请上传菜品的图片</view>
@@ -120,6 +137,7 @@
 		<u-select v-model="sexModal.show" :list="sexModal.list" @confirm="sexModalCange"></u-select>
 		<u-select v-model="marryModal.show" :list="marryModal.list" @confirm="marryModalCange"></u-select>
 		<u-select v-model="timeList.show" mode="mutil-column" :list="timeList.data" @confirm="changWorkConfirm"></u-select>
+		<u-select v-model="cookStyleModal.show" :list="cookStyleModal.list" @confirm="cookStyleAdd"></u-select>
 		<u-picker v-model="originAddressModal.show" mode="region" @confirm="originAddressModalChange"></u-picker>
 		<view style="width: 100%;height: 200rpx;"></view>
 		<view v-if="userInfo.cook_status == 0 || userInfo.cook_status == 3" class="introduce-img">
@@ -132,7 +150,8 @@
 import { isEmpty } from '@/libs/utils.js';
 import uInput from '../../../uview-ui/components/u-input/u-input.vue';
 import uUpload from '../../../uview-ui/components/u-upload/u-upload.vue';
-import uIcon from '../../../uview-ui/components/u-icon/u-icon.vue';
+import uTag from '@/uview-ui/components/u-tag/u-tag.vue';
+import uIcon from '@/uview-ui/components/u-icon/u-icon.vue';
 import uTimeLine from '@/uview-ui/components/u-time-line/u-time-line.vue';
 import uTimeLineItem from '@/uview-ui/components/u-time-line-item/u-time-line-item.vue';
 import uSelect from '@/uview-ui/components/u-select/u-select.vue';
@@ -144,7 +163,7 @@ import dataValidation from '@/utils/dataValidation.js';
 
 export default {
 	name: 'apply',
-	components: { uInput, uUpload, uIcon, uTimeLine, uTimeLineItem, uSelect },
+	components: { uInput, uUpload, uIcon, uTag, uTimeLine, uTimeLineItem, uSelect },
 	data() {
 		return {
 			uploadImgUrl: hostConst.upFileHost, // 上传的图片服务器地址
@@ -196,6 +215,11 @@ export default {
 			originAddressModal: {
 				show: false
 			},
+			cookStyleModal: {
+				// 烹饪样式列表
+				show: false,
+				list: []
+			},
 			userInfo: {
 				// 用户信息
 				id: 0,
@@ -214,7 +238,8 @@ export default {
 				identify_card1: [], // 上传文件后返回的相对路径
 				identify_card2: [], // 上传文件后返回的相对路径
 				residence_permit: [], // 上传文件后返回的相对路径
-				foods: [] // 可选，厨师擅长的食物列表，组装成json数组，如果没有，传 null
+				foods: [], // 可选，厨师擅长的食物列表，组装成json数组，如果没有，传 null
+				food_types:[]
 			},
 			form: {
 				// 最终提交数据
@@ -230,7 +255,8 @@ export default {
 				identify_card2: '', // 上传文件后返回的相对路径
 				residence_permit: '', // 上传文件后返回的相对路径
 				foods: '', // 可选，厨师擅长的食物列表，组装成json数组，如果没有，传 null
-				workTime: []
+				workTime: [],
+				food_types: ''
 			},
 			formRule: {
 				name: '真实姓名,r', // 必填,用户姓名
@@ -253,6 +279,19 @@ export default {
 	},
 	methods: {
 		pageDataRequest() {
+			this.$api.cooks.food_types.request().then(data => {
+				if (data.length > 0) {
+					this.cookStyleModal.list = data.split('|').map(item => {
+						return {
+							value: item,
+							label: item
+						};
+					});
+					
+					console.log('怕減肥的',this.cookStyleModal)
+				}
+			});
+
 			this.$api.users.me.request().then(data => {
 				this.userInfo = data;
 
@@ -269,7 +308,7 @@ export default {
 						this.cookText = '申请驳回';
 					}
 				}
-				
+
 				this.form.name = data.name;
 				this.form.phone = data.phone;
 
@@ -278,7 +317,7 @@ export default {
 		},
 		cooksMeRequest() {
 			this.$api.cooks.me.request().then(data => {
-				console.log('哈哈',data);
+				console.log('哈哈', data);
 				this.form.name = data.name;
 				this.form.phone = data.phone;
 				this.form.sex = data.sex;
@@ -325,6 +364,7 @@ export default {
 					};
 				});
 
+				this.formData.food_types = data.food_types.split('|');
 				this.formData.workTime = data.workTime;
 
 				console.log(this.formData);
@@ -344,6 +384,17 @@ export default {
 		},
 		originAddressModalChange(e) {
 			this.form.origin_address = e.province.label + e.city.label + e.area.label;
+		},
+		// 打开选择器
+		cookStyleOpen() {
+			this.cookStyleModal.show = !this.cookStyleModal.show;
+		},
+		cookStyleAdd(data) {
+			this.formData.food_types.push(data[0].value);
+			console.log(this.formData.food_types);
+		},
+		cookStyleClose(index) {
+			this.formData.food_types.splice(index, 1);
 		},
 		addWorkTime() {
 			let data = {
@@ -422,6 +473,8 @@ export default {
 					}
 				}
 			});
+			
+			this.form.food_types = this.formData.food_types.join('|')
 
 			// let workTimeChcek = true;
 			// this.form.workTime.map(item => {
@@ -460,15 +513,10 @@ export default {
 };
 </script>
 
-<style>
-page {
-	background-color: #fcfcfc;
-}
-</style>
 <style scoped lang="scss">
 .car-assessment-reserve {
 	background-color: #f9f9f9;
-	
+
 	.banner-content {
 		margin-top: 22rpx;
 	}
@@ -483,7 +531,7 @@ page {
 		.user-title {
 			position: relative;
 			padding-left: 25rpx;
-			height: 90rpx;
+			height: 80rpx;
 			font-size: 30rpx;
 			line-height: 90rpx;
 			color: #151515;
@@ -574,7 +622,7 @@ page {
 		.button {
 			width: 655rpx;
 			height: 90rpx;
-			background-color: #e72528;
+			// background-color: #e72528;
 			border-radius: 18rpx;
 			font-size: 36rpx;
 			color: #ffffff;

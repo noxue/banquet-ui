@@ -142,11 +142,6 @@ export default {
 };
 </script>
 
-<style>
-page {
-	background-color: #fcfcfc;
-}
-</style>
 <style scoped lang="scss">
 .car-assessment-reserve {
 	.banner-content {
@@ -254,7 +249,7 @@ page {
 		.button {
 			width: 655rpx;
 			height: 90rpx;
-			background-color: #e72528;
+			// background-color: #e72528;
 			border-radius: 18rpx;
 			font-size: 36rpx;
 			color: #ffffff;

@@ -1,9 +1,8 @@
-1
 <template>
 	<view>
 		<template v-if="table.data.length > 0">
 			<view v-for="(item, index) in table.data" class="card-item" @click="toPageDetails(item.id)">
-				<image class="image" :src="fileHost + item.pic"></image>
+				<image class="image" :src="fileHost2 + item.pic"></image>
 				<view class="text-cut text-lg text-bold ui-card-fixedTitle">
 					<view class="bg-mask-bottom" style="display: flex;align-items: flex-end;font-size: 40rpx;">
 						{{ item.name }}
@@ -14,11 +13,11 @@
 		</template>
 		<template v-else>
 			<view class="'cookZanwu" style="display: flex;flex-direction: column;align-items: center;justify-content: center;;">
-				<image src="https://cookwaptest.5156dujia.com/img/cookList_bj.png"></image>
+				<image :src="fileHost + '/cookList_bj.png'"></image>
 				<view>暂无套餐列表</view>
 			</view>
 		</template>
-
+		
 		<view style="width: 100%;height: 50rpx;"></view>
 	</view>
 </template>
@@ -31,7 +30,8 @@ export default {
 	mixins: [table],
 	data() {
 		return {
-			fileHost: hostConst.fileHost2,
+			fileHost: hostConst.fileHost,
+			fileHost2: hostConst.fileHost2,
 			table: {
 				data: [],
 				total: 0,

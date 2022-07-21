@@ -22,7 +22,7 @@ page {
 }
 
 .auth-group {
-	padding: 1rpx 30rpx;
+	/* padding: 1rpx 30rpx; */
 	display: flex;
 	align-items: center;
 	min-height: 90rpx;

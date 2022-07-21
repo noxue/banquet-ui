@@ -1,6 +1,7 @@
 <template>
 	<view class="car-assessment-reserve flex-column-start-center">
-		<view class="user-content">
+		<view style="position: absolute;left: 0;top: 0;z-index: 0;"><image src="../../static/image/create-order.png" style="width: 750rpx;height: 565rpx"></image></view>
+		<view class="user-content" style="position: relative;z-index: 2;margin-top: 460rpx;box-shadow: 0rpx 0rpx 10rpx 2rpx #d9d9d9;">
 			<view class="user-title">基础信息</view>
 			<view class="user-ul">
 				<view class="user-li flex-row-start-center">
@@ -23,20 +24,23 @@
 					<view class="label flex-row flex-shrink-0"><view class="text-align-last flex-1">用餐地址</view></view>
 					<view class="value"><u-input v-model="form.address" placeholder="请输入用餐地址" height="40" maxlength="50"></u-input></view>
 				</view>
-				<!-- 	<view class="user-li flex-row-start-center">
-						<view class="label flex-row flex-shrink-0"><view class="text-align-last flex-1">详细地址</view></view>
-						<view class="value"><u-input v-model="form.address" placeholder="请输入详细地址" height="40" maxlength="50"></u-input></view>
-					</view> -->
+				<view class="user-li flex-row-start-center">
+					<view class="label flex-row flex-shrink-0"><view class="text-align-last flex-1">其他备注</view></view>
+					<view class="value"><u-input type="textarea" :border="true" style="flex: 1;"></u-input></view>
+				</view>
 			</view>
 		</view>
 
-		<view class="user-content">
+		<!-- <view class="user-content">
 			<view class="user-title">其他备注</view>
 			<view class="user-ul"><u-input type="textarea" :border="true"></u-input></view>
-		</view>
+		</view> -->
 
 		<!-- 宣传图 -->
-		<view class="user-content" style="padding: 0rpx;"><image :src="hostConst.fileHost + '/1.jpg'" style="width: 100%;"></image></view>
+		<!-- <view class="user-content" style="padding: 0rpx;"><image :src="hostConst.fileHost + '/7.jpg'" style="width: 100%;"></image></view> -->
+		<view class="user-content" style="padding: 0rpx;background-color: unset;margin-top: 40rpx;padding: 20rpx;">
+			{{server}}
+		</view>
 
 		<view style="width: 100%;height: 200rpx;"></view>
 		<view class="introduce-img"><button class="button" type="default" @click="submit">提交</button></view>
@@ -59,23 +63,24 @@ import dataValidation from '@/utils/dataValidation.js';
  */
 export default {
 	name: 'cookOne',
-	components: { uInput, uUpload, uPicker,uIcon },
+	components: { uInput, uUpload, uPicker, uIcon },
 	data() {
 		return {
 			hostConst,
+			server:'',
 			numberModal: {
 				show: false
 			},
 			datetimeModal: {
 				show: false,
-				params : {
+				params: {
 					year: true,
 					month: true,
 					day: true,
 					hour: true,
 					minute: true,
 					second: true,
-					timestamp: true, // 1.3.7版本提供
+					timestamp: true // 1.3.7版本提供
 				}
 			},
 			form: {
@@ -97,6 +102,10 @@ export default {
 				this.form.phone = data.phone;
 				this.form.address = data.address;
 			});
+			
+			this.$api.cooks.service.request().then(data => {
+				this.server = data
+			})
 		},
 		numberModalBackspace(e) {
 			let number = this.form.number_of_people;
@@ -140,13 +149,10 @@ export default {
 };
 </script>
 
-<style>
-page {
-	background-color: #fcfcfc;
-}
-</style>
 <style scoped lang="scss">
 .car-assessment-reserve {
+	background-color: #fff;
+
 	.banner-content {
 		margin-top: 22rpx;
 	}
@@ -193,7 +199,7 @@ page {
 				}
 
 				.value {
-					margin-left: 80rpx;
+					margin-left: 40rpx;
 				}
 			}
 		}

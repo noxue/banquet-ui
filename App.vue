@@ -29,6 +29,10 @@ export default {
 @import 'uview-ui/index.scss';
 @import 'css/base.css';
 
+page{
+	background-color: #f5f5f9;
+}
+
 .container {
 	height: 100%;
 	display: flex;
@@ -46,10 +50,14 @@ export default {
 	.button {
 		width: 655rpx;
 		height: 90rpx;
-		background-color: #e72528;
+		background-color: #f8d94a;
 		border-radius: 18rpx;
 		font-size: 36rpx;
 		color: #ffffff;
 	}
+}
+
+uni-button:after{
+	border:none !important;
 }
 </style>

@@ -126,7 +126,7 @@ export default {
 
 		jumpOrder: function() {
 			if (userServe.checkUserLogin(true) === false) return false;
-			
+
 			uni.navigateTo({
 				url: '/pages/order/comboConfimeOrder?id=' + this.partyId
 			});
@@ -404,5 +404,11 @@ swiper-item image {
 	text-align: center;
 	margin: 0 auto;
 	font-size: 26rpx;
+}
+
+/deep/ ._p,
+/deep/ p {
+	overflow-wrap: break-word;
+	word-break: break-all;
 }
 </style>

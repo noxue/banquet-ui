@@ -139,6 +139,7 @@ const api = {
 			url: hostConst.apiHost + '/cooks/me',
 			data: {},
 			method: 'GET',
+			showErrorLoading:false,
 			request: function(data) {
 				return promise(this, data);
 			}
@@ -176,6 +177,36 @@ const api = {
 			method: 'GET',
 			request: function(data) {
 				return promise(this, data);
+			}
+		},
+		id: {
+			name: '[厨师]获取指定id厨师信息',
+			api: 'cooks/id',
+			url: hostConst.apiHost + '/cooks/:id',
+			data: {},
+			method: 'GET',
+			request: function(data, config) {
+				return promise(this, data, config);
+			}
+		},
+		food_types:{
+			name: '[厨师]获取工作时间',
+			api: 'cooks/food_types',
+			url: hostConst.apiHost + '/cooks/food_types',
+			data: {},
+			method: 'GET',
+			request: function(data, config) {
+				return promise(this, data, config);
+			}
+		},
+		service:{
+			name: '[厨师]服务说明信息',
+			api: 'cooks/service',
+			url: hostConst.apiHost + '/cooks/service',
+			data: {},
+			method: 'GET',
+			request: function(data, config) {
+				return promise(this, data, config);
 			}
 		},
 		workTime: {

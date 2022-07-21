@@ -1,33 +1,58 @@
 <template>
-	<view class="auth">
-		<view class="wanl-title">欢迎登录</view>
-		<view class="auth-group radius-bock bg-gray wlian-grey-light">
-			<input :value="form.phone" @input="onKeyInput" data-name="phone" placeholder="请输入手机号" type="number" maxlength="11" confirm-type="next" placeholder-class="placeholder" name="phone" />
-		</view>
+	<view style="width: 100%;height: 100%;">
+		<view class="auth" style="position: relative;z-index: 1;">
+			<!-- <view class="wanl-title">欢迎登录</view> -->
+			<view style="width: 100%;display: flex;justify-content: center;margin-top: 200rpx;"><image src="../../static/images/logo.jpg" style="border-radius: 50%;width: 140rpx;height: 140rpx;"></image></view>
+			<view class="auth-group radius-bock bg-gray wlian-grey-light" style="margin-top: 170rpx;">
+				<text style="margin-right: 10rpx;">+86</text>
+				<input
+					:value="form.phone"
+					@input="onKeyInput"
+					data-name="phone"
+					placeholder="请输入手机号"
+					type="number"
+					maxlength="11"
+					confirm-type="next"
+					placeholder-style="color:#f6f6f6;font-size:30rpx"
+					placeholder-class="placeholder"
+					style="color: #fff;"
+					name="phone"
+				/>
+			</view>
 
-		<view v-if="showSendCode === false" class="auth-button flex flex-direction" style="width: 100%;" @click="sendCodeRequest()">
-			<button class="cu-btn bg-orange sl radius-bock" :class="{ can: isSendCodeOne === true }" style="width: 100%;" formType="submit" :disabled="isSendCodeOne === false">获取验证码</button>
-		</view>
-
-		<block v-else>
-			<view class="auth-button flex flex-direction" style="display: flex;padding-top: 0;">
-				<view class="auth-group radius-bock bg-gray wlian-grey-light" style="margin-right: 20rpx;margin-bottom: 0rpx;">
-					<input :value="form.code" @input="onKeyInput" data-name="code" placeholder="短信验证码" type="number" maxlength="11" confirm-type="next" placeholder-class="placeholder" name="code" />
+			<view class="flex flex-direction bg-gray" style="display: flex;padding-top: 0;align-items: center;justify-content: space-between;">
+				<view class="auth-group radius-bock  wlian-grey-light" style="margin-right: 20rpx;margin-bottom: 0rpx;">
+					<input
+						:value="form.code"
+						@input="onKeyInput"
+						data-name="code"
+						placeholder="短信验证码"
+						type="number"
+						maxlength="11"
+						confirm-type="next"
+						placeholder-style="color:#f6f6f6;font-size:30rpx"
+						style="color: #fff;"
+						placeholder-class="placeholder"
+						name="code"
+					/>
 				</view>
-				<button class="cu-btn bg-orange sl radius-bock" :class="{ can: isSendCodeOne === true }" style="width: 250rpx;" @click="sendCodeRequest()" :disabled="isSendCodeTwo === false">{{ countDown }}</button>
+				<!--  :disabled="isSendCodeTwo === false" -->
+				<button class="cu-btn bg-orange sl radius-bock" :class="{ can: isSendCodeOne === true }" style="background: none;padding: 0px;margin: 0px;width: auto;color: #000;width: 5em;text-align: center;" @click="sendCodeRequest()">{{ countDown }}</button>
 			</view>
 
-			<view class="auth-button flex flex-direction" style="width: 100%;padding-top: 0;" @click="loginRequest()">
-				<button class="cu-btn bg-orange sl radius-bock" :class="{ can: isLogin }" style="width: 100%;" formType="submit" :disabled="isLogin === false">登录</button>
+			<view class="auth-button flex flex-direction" style="width: 100%;padding-top: 0;margin-top: 66rpx;" @click="loginRequest()">
+				<button class="cu-btn bg-orange sl radius-bock" :class="{ can: isLogin }" style="width: 100%;color: #000;border-radius: 40rpx;background-color: #F7da49" formType="submit" :disabled="isLogin === false">登录</button>
 			</view>
-		</block>
 
-		<view class="auth-clause">
-			获取验证码代表阅读并同意
-			<text @tap="onDetails($store.state.common.appConfig.user_agreement, '用户协议')">用户协议</text>
-			及
-			<text @tap="onDetails($store.state.common.appConfig.privacy_protection, '隐私保护')">隐私权保护声明</text>
+			<view class="auth-clause" style="color:#f6f6f6;">
+				获取验证码代表阅读并同意
+				<text @tap="toPagesXiye1">用户服务协议</text>
+				及
+				<text @tap="toPagesXiye2">隐私保密声明</text>
+			</view>
 		</view>
+
+		<image src="http://image.noxue.com/baijiayan/login_bottom.jpg" mode="aspectFill" style="width: 100%;position: absolute;bottom: 0;left: 0;z-index: 0;"></image>
 	</view>
 </template>
 
@@ -131,6 +156,16 @@ export default {
 
 				loginSuccess();
 			});
+		},
+		toPagesXiye1() {
+			uni.navigateTo({
+				url: '/pages/login/xieyi2'
+			});
+		},
+		toPagesXiye2() {
+			uni.navigateTo({
+				url: '/pages/login/xieyi1'
+			});
 		}
 	}
 };
@@ -139,13 +174,22 @@ export default {
 <style>
 @import url('login.css');
 
+page {
+	height: 100%;
+	background-color: #f2c24e;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
 .bg-gray {
-	background-color: #f0f0f0;
+	/* background-color: #f0f0f0; */
 	color: #333333;
+	border-bottom: 4rpx solid #ffffff;
 }
 
 .radius-bock {
-	border-radius: 9px;
+	/* border-radius: 9px; */
 	overflow: hidden;
 }
 

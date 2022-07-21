@@ -13,7 +13,7 @@
 		</view>
 
 		<view class="order-list" v-if="newTabel.length > 0">
-			<block v-for="(item, index) in newTabel">
+			<block v-for="(item, index) in newTabel" :key="index">
 				<view class="a-order" :key="index">
 					<view @tap="jumpDetail" class="order-date" :data-id="item.id">
 						<view class="providerTitle">下单时间:{{ item.created_at }}</view>
