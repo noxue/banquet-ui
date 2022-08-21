@@ -106,7 +106,27 @@ const api = {
 			showSuccessLoading: true,
 			showSuccessLoadingMessage: '下单成功',
 			request: function(data) {
+				return promise(this, data, config);
+			}
+		},
+		pay: {
+			name: '[订单]创建支付订单',
+			api: 'orders/pay',
+			url: hostConst.apiHost + '/orders/pay',
+			data: {},
+			method: 'POST',
+			request: function(data) {
 				return promise(this, data);
+			}
+		},
+		payGet: {
+			name: '[订单]创建支付订单',
+			api: 'orders/pay',
+			url: hostConst.apiHost + '/orders/pay',
+			data: {},
+			method: 'GET',
+			request: function(data,config) {
+				return promise(this, data, config);
 			}
 		}
 	},
@@ -139,7 +159,7 @@ const api = {
 			url: hostConst.apiHost + '/cooks/me',
 			data: {},
 			method: 'GET',
-			showErrorLoading:false,
+			showErrorLoading: false,
 			request: function(data) {
 				return promise(this, data);
 			}
@@ -189,7 +209,7 @@ const api = {
 				return promise(this, data, config);
 			}
 		},
-		food_types:{
+		food_types: {
 			name: '[厨师]获取工作时间',
 			api: 'cooks/food_types',
 			url: hostConst.apiHost + '/cooks/food_types',
@@ -199,7 +219,7 @@ const api = {
 				return promise(this, data, config);
 			}
 		},
-		service:{
+		service: {
 			name: '[厨师]服务说明信息',
 			api: 'cooks/service',
 			url: hostConst.apiHost + '/cooks/service',
