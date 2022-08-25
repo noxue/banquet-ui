@@ -13,18 +13,18 @@ const formal = {
 	hostType: 'formal',
 	
 	// 服务器主域名(非api,可能某些特殊情况下会用到)
-	host: 'https://api.b.pbootcms.tv',
+	host: 'https://api.uchu360.com',
 
 	// 服务器api域名(api域名,接口一般使用这个)
-	apiHost: 'https://api.b.pbootcms.tv/api',
+	apiHost: 'https://api.uchu360.com/api',
 
 	// 文件服务器主域名(相对图片添加路径)
 	fileHost: 'http://image.noxue.com/baijiayan',
 
-	fileHost2: 'https://api.b.pbootcms.tv/static',
+	fileHost2: 'https://api.uchu360.com/static',
 
 	// 上传文件服务器主域名
-	upFileHost: 'https://api.b.pbootcms.tv/api/upload',
+	upFileHost: 'https://api.uchu360.com/api/upload',
 
 	// webSoer服务器
 	webSocketHost: '',

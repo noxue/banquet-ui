@@ -23,7 +23,7 @@
 				</view>
 				<view class="user-li flex-row-start-center">
 					<view class="label flex-row flex-shrink-0"><view class="text-align-last flex-1">用餐日期</view></view>
-					<view class="value"><u-input v-model="form.datetime" @click="datetimeModal.show = true" placeholder="请输入用餐日期" disabled height="40" maxlength="50"></u-input></view>
+					<view class="value"><u-input v-model="form.datetime" @click="showDatetimeModal" placeholder="请输入用餐日期" disabled height="40" maxlength="50"></u-input></view>
 				</view>
 				<view class="user-li flex-row-start-center">
 					<view class="label flex-row flex-shrink-0"><view class="text-align-last flex-1">用餐地址</view></view>
@@ -128,6 +128,9 @@ export default {
 					this.detail = data;
 				});
 		},
+		showDatetimeModal() {
+			this.datetimeModal.show = true;
+		},
 		numberModalBackspace(e) {
 			let number = this.form.number_of_people;
 			this.form.number_of_people = number.slice(0, number.length - 1);
@@ -155,81 +158,90 @@ export default {
 				});
 			}
 
-			this.$api.orders.post.request(this.form).then(data => {
-				let orderId = data.order_id;
-				// #ifdef APP
-				let pay_type = 'weCahtApp';
-				// #endif
-
-				// #ifdef MP-WEIXIN
-				let pay_type = 'weCahtMini';
-				// #endif
+			this.$api.orders.post.request(this.form).then(order_id => {
+				// let orderId = data.order_id;
 
 				let params = {
-					orderId,
+					order_id,
 					pay_type
 				};
 
-				this.$api.orders.pay.request(params).then(payData => {
-					// {
-					//   appid:"",  // 微信开放平台 - 应用 - AppId，注意和微信小程序、公众号 AppId 可能不一致
-					//   partnerid:"",   // 微信支付商户号
-					//   prepay_id:"",   // 统一下单订单号
-					//   sign:"",  // 签名
-					//   noncestr:"", // 随机字符串
-					//   timeStamp:"", // 时间戳
-					//  }
+				// #ifdef MP-WEIXIN
+				let pay_type = 'WxMini';
 
-					if (params.pay_type == 'weChatMini') {
-						uni.requestPayment({
-							appId: payData.appid,
-							signType: 'MD5',
-							nonceStr: payData.noncestr,
-							package: 'prepay_id=' + payData.prepay_id,
-							paySign: payData.sign,
-							timeStamp: payData.timeStamp,
-							success: e => {
-								this.paySuccess(orderId);
-							},
-							fail: e => {
-								uni.showModal({
-									content: '支付失败,原因为: ' + e.errMsg,
-									showCancel: false
-								});
-							},
-							complete: () => {}
-						});
-					} else if (params.pay_type == 'weCahtApp') {
-						uni.requestPayment({
-							provider: 'wxpay',
-							orderInfo: {
-								appid: payData.appid, // 微信开放平台 - 应用 - AppId，注意和微信小程序、公众号 AppId 可能不一致
-								noncestr: payData.noncestr, // 随机字符串
-								package: 'Sign=WXPay', // 固定值
-								partnerid: payData.partnerid, // 微信支付商户号
-								prepayid: payData.prepay_id, // 统一下单订单号
-								timestamp: payData.timeStamp, // 时间戳（单位：秒）
-								sign: payData.sign // 签名，这里用的 MD5/RSA 签名
-							},
-							success: e => {
-								this.paySuccess(orderId);
-							},
-							fail: e => {
-								uni.showModal({
-									content: '支付失败,原因为: ' + e.errMsg,
-									showCancel: false
-								});
-							},
-							complete: () => {}
-						});
+				uni.login({
+					provider: 'weixin',
+					success: loginRes => {
+						console.log('这里',loginRes)
+						
+						params.pay_type = pay_type;
+						params.code = loginRes.code;
+						this.payRequest(params);
 					}
 				});
-				setTimeout(() => {
-					// TODO 支付开发
-					uni.switchTab({
-						url: '/pages/order/paySuccess'
+				// #endif
+
+				// #ifdef APP
+				let pay_type = 'WxApp';
+				params.pay_type = pay_type;
+				this.payRequest(params);
+				// #endif
+			});
+		},
+		payRequest(params) {
+			this.$api.orders.pay.request(params).then(payData => {
+				// {
+				//   appid:"",  // 微信开放平台 - 应用 - AppId，注意和微信小程序、公众号 AppId 可能不一致
+				//   partnerid:"",   // 微信支付商户号
+				//   prepay_id:"",   // 统一下单订单号
+				//   sign:"",  // 签名
+				//   noncestr:"", // 随机字符串
+				//   timeStamp:"", // 时间戳
+				//  }
+
+				if (params.pay_type == 'weChatMini') {
+					uni.requestPayment({
+						appId: payData.appid,
+						signType: 'MD5',
+						nonceStr: payData.noncestr,
+						package: 'prepay_id=' + payData.prepay_id,
+						paySign: payData.sign,
+						timeStamp: payData.timeStamp,
+						success: e => {
+							this.paySuccess(orderId);
+						},
+						fail: e => {
+							uni.showModal({
+								content: '支付失败,原因为: ' + e.errMsg,
+								showCancel: false
+							});
+						},
+						complete: () => {}
 					});
-				}, 2000);
+				} else if (params.pay_type == 'weCahtApp') {
+					uni.requestPayment({
+						provider: 'wxpay',
+						orderInfo: {
+							appid: payData.appid, // 微信开放平台 - 应用 - AppId，注意和微信小程序、公众号 AppId 可能不一致
+							noncestr: payData.noncestr, // 随机字符串
+							package: 'Sign=WXPay', // 固定值
+							partnerid: payData.partnerid, // 微信支付商户号
+							prepayid: payData.prepay_id, // 统一下单订单号
+							timestamp: payData.timeStamp, // 时间戳（单位：秒）
+							sign: payData.sign // 签名，这里用的 MD5/RSA 签名
+						},
+						success: e => {
+							this.paySuccess(orderId);
+						},
+						fail: e => {
+							uni.showModal({
+								content: '支付失败,原因为: ' + e.errMsg,
+								showCancel: false
+							});
+						},
+						complete: () => {}
+					});
+				}
 			});
 		},
 		// 支付成功
