@@ -85,6 +85,12 @@
 			}
 		},
 		{
+			"path": "pages/order/paySuccess",
+			"style": {
+				"navigationBarTitleText": "支付成功"
+			}
+		},
+		{
 			"path": "pages/my/useHelp",
 			"style": {
 				"navigationBarTitleText": "使用帮助"
