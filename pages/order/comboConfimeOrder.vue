@@ -169,16 +169,26 @@ export default {
 				// #ifdef MP-WEIXIN
 				let pay_type = 'WxMini';
 
-				uni.login({
-					provider: 'weixin',
-					success: loginRes => {
-						console.log('这里',loginRes)
-						
-						params.pay_type = pay_type;
-						params.code = loginRes.code;
-						this.payRequest(params);
-					}
-				});
+				let openid = uni.getStorageSync('openid');
+				if (openid) {
+					params.pay_type = pay_type;
+					params.openid = openid;
+					this.payRequest(params);
+				} else {
+					uni.login({
+						provider: 'weixin',
+						success: loginRes => {
+							console.log('这里', loginRes);
+
+							this.$api.users.code2openid.request({ code: loginRes.code }).then(data => {
+								uni.setStorageSync('openid', data);
+								params.pay_type = pay_type;
+								params.openid = data;
+								this.payRequest(params);
+							});
+						}
+					});
+				}
 				// #endif
 
 				// #ifdef APP

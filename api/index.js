@@ -106,7 +106,7 @@ const api = {
 			showSuccessLoading: true,
 			showSuccessLoadingMessage: '下单成功',
 			request: function(data) {
-				return promise(this, data, config);
+				return promise(this, data);
 			}
 		},
 		pay: {
@@ -317,6 +317,17 @@ const api = {
 			data: {},
 			apiType: 'user',
 			method: 'GET',
+			request: function(data) {
+				return promise(this, data);
+			}
+		},
+		code2openid:{
+			name: '[用户]code转openid',
+			api: 'users/code2openid',
+			url: hostConst.apiHost + '/users/code2openid',
+			data: {},
+			apiType: 'user',
+			method: 'POST',
 			request: function(data) {
 				return promise(this, data);
 			}
