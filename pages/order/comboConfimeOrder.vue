@@ -209,16 +209,16 @@ export default {
 				//   timeStamp:"", // 时间戳
 				//  }
 
-				if (params.pay_type == 'weChatMini') {
+				if (params.pay_type == 'WxMini') {
 					uni.requestPayment({
 						appId: payData.appid,
 						signType: 'MD5',
 						nonceStr: payData.noncestr,
 						package: 'prepay_id=' + payData.prepay_id,
 						paySign: payData.sign,
-						timeStamp: payData.timeStamp,
+						timeStamp: payData.timestamp,
 						success: e => {
-							this.paySuccess(orderId);
+							this.paySuccess(params.order_id);
 						},
 						fail: e => {
 							uni.showModal({
@@ -228,7 +228,7 @@ export default {
 						},
 						complete: () => {}
 					});
-				} else if (params.pay_type == 'weCahtApp') {
+				} else if (params.pay_type == 'WxApp') {
 					uni.requestPayment({
 						provider: 'wxpay',
 						orderInfo: {
@@ -237,11 +237,11 @@ export default {
 							package: 'Sign=WXPay', // 固定值
 							partnerid: payData.partnerid, // 微信支付商户号
 							prepayid: payData.prepay_id, // 统一下单订单号
-							timestamp: payData.timeStamp, // 时间戳（单位：秒）
+							timestamp: payData.timestamp, // 时间戳（单位：秒）
 							sign: payData.sign // 签名，这里用的 MD5/RSA 签名
 						},
 						success: e => {
-							this.paySuccess(orderId);
+							this.paySuccess(params.order_id);
 						},
 						fail: e => {
 							uni.showModal({
