@@ -1,5 +1,7 @@
 <template>
 	<view style="width: 100%;height: 100%;">
+		<u-navbar :immersive="true" :background="{ backgroundColor: 'transparent' }" :border-bottom="false" title-color="'#ffffff'" :custom-back="toHome"></u-navbar>
+
 		<view class="auth" style="position: relative;z-index: 1;">
 			<!-- <view class="wanl-title">欢迎登录</view> -->
 			<view style="width: 100%;display: flex;justify-content: center;margin-top: 200rpx;"><image src="../../static/images/logo.jpg" style="border-radius: 50%;width: 140rpx;height: 140rpx;"></image></view>
@@ -37,7 +39,9 @@
 					/>
 				</view>
 				<!--  :disabled="isSendCodeTwo === false" -->
-				<button class="cu-btn bg-orange sl radius-bock" :class="{ can: isSendCodeOne === true }" style="background: none;padding: 0px;margin: 0px;width: auto;color: #000;width: 5em;text-align: center;" @click="sendCodeRequest()">{{ countDown }}</button>
+				<button class="cu-btn bg-orange sl radius-bock" :class="{ can: isSendCodeOne === true }" style="background: none;padding: 0px;margin: 0px;width: auto;color: #000;width: 5em;text-align: center;" @click="sendCodeRequest()">
+					{{ countDown }}
+				</button>
 			</view>
 
 			<view class="auth-button flex flex-direction" style="width: 100%;padding-top: 0;margin-top: 66rpx;" @click="loginRequest()">
@@ -64,10 +68,10 @@ import { loginSuccess } from '@/libs/router.js';
 export default {
 	data() {
 		return {
+			xianzhi: false,
 			isSendCodeOne: false, // 第一个发送验证码按钮
-			isSendCodeTwo: false, // 第二个发送验证码按钮
+			isSendCodeTwo: true, // 第二个发送验证码按钮
 			isLogin: false, // 登录按钮
-			showSendCode: false, // 显示第二个面板
 			form: {
 				phone: '', // 手机号
 				code: '' // 短信验证码
@@ -102,9 +106,13 @@ export default {
 			}
 		},
 		sendCodeRequest() {
+			if (this.xianzhi == true || this.isSendCodeTwo == false) return false;
+			this.xianzhi = true;
+
 			let checkRes = graceChecker.check(this.form, [{ name: 'phone', checkType: 'phoneno', errorMsg: '请输入正确的手机号' }]);
 
 			if (checkRes === false) {
+				this.xianzhi = false;
 				return uni.showToast({
 					title: graceChecker.error,
 					icon: 'none'
@@ -115,11 +123,16 @@ export default {
 				.request({
 					phone: this.form.phone
 				})
-				.then(() => {
-					this.showSendCode = true;
-					this.isSendCodeTwo = false;
-					this.codeCountDown();
-				});
+				.then(
+					() => {
+						this.isSendCodeTwo = false;
+						this.codeCountDown();
+						this.xianzhi = false;
+					},
+					() => {
+						this.xianzhi = false;
+					}
+				);
 		},
 		// 倒计时
 		codeCountDown() {
@@ -165,6 +178,11 @@ export default {
 		toPagesXiye2() {
 			uni.navigateTo({
 				url: '/pages/login/xieyi1'
+			});
+		},
+		toHome() {
+			uni.switchTab({
+				url: '/pages/index/index'
 			});
 		}
 	}

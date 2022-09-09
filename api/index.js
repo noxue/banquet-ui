@@ -125,7 +125,7 @@ const api = {
 			url: hostConst.apiHost + '/orders/pay',
 			data: {},
 			method: 'GET',
-			request: function(data,config) {
+			request: function(data, config) {
 				return promise(this, data, config);
 			}
 		}
@@ -317,11 +317,12 @@ const api = {
 			data: {},
 			apiType: 'user',
 			method: 'GET',
+			showLoading: false,
 			request: function(data) {
 				return promise(this, data);
 			}
 		},
-		code2openid:{
+		code2openid: {
 			name: '[用户]code转openid',
 			api: 'users/code2openid',
 			url: hostConst.apiHost + '/users/code2openid',

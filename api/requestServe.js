@@ -162,6 +162,12 @@ class requestServe {
 
 			_this.hideLoading(config);
 
+			if (res.data.error == 'Invalid token') {
+				_this.alert('登录过期，请重新登录');
+				toPageUserLoginTimer();
+				return false
+			}
+			
 			// html异常错误,不等于200走不到该程序内
 			if (res.statusCode !== 200) {
 				_this.alert('网络延迟,请稍后重试');

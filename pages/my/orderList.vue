@@ -28,6 +28,7 @@
 							<view class="date" style="margin-top: 5rpx;">地址 : {{ item.address }}</view>
 						</view>
 					</view>
+					<view v-if="item.status == '-2'" @click="submit(item)" style="margin-left: 30rpx;margin-right: 30rpx;padding: 15rpx 0;display: flex;justify-content: flex-end;"><view class="button">支付</view></view>
 				</view>
 			</block>
 		</view>
@@ -45,7 +46,7 @@ export default {
 	data() {
 		return {
 			fileHost: hostConst.fileHost2,
-			statusType: ['全部', '待接单', '已接单'], //, '已完成'
+			statusType: ['全部', '待付款', '待接单', '已接单'], //, '已完成'
 			currentType: 0,
 			length: 0,
 			table: {},
@@ -84,14 +85,17 @@ export default {
 						console.log('哈哈', data);
 						let statusList = {
 							'-1': '已取消',
+							'-2': '未付款',
 							0: '已下单',
 							1: '已接单',
+							5: '已付款',
 							10: '已完成'
 						};
 
 						let statusList2 = {
-							0: 1,
-							1: 2,
+							0: 0,
+							'-2': 1,
+							5: 2,
 							10: 3
 						};
 
@@ -125,6 +129,119 @@ export default {
 			});
 
 			this.newTabel = newData;
+		},
+
+		submit(item) {
+			let order_id = item.id;
+
+			if (!order_id) return false;
+
+			let params = {
+				order_id,
+				pay_type: ''
+			};
+
+			// #ifdef MP-WEIXIN
+			let pay_type = 'WxMini';
+
+			let openid = uni.getStorageSync('openid');
+			if (openid) {
+				params.pay_type = pay_type;
+				params.openid = openid;
+				this.payRequest(params);
+			} else {
+				uni.login({
+					provider: 'weixin',
+					success: loginRes => {
+						console.log('这里', loginRes);
+
+						this.$api.users.code2openid.request({ code: loginRes.code }).then(data => {
+							uni.setStorageSync('openid', data);
+							params.pay_type = pay_type;
+							params.openid = data;
+							this.payRequest(params);
+						});
+					}
+				});
+			}
+			// #endif
+
+			// #ifdef APP
+			let pay_type = 'WxApp';
+			params.pay_type = pay_type;
+			this.payRequest(params);
+			// #endif
+		},
+
+		payRequest(params) {
+			this.$api.orders.pay.request(params).then(payData => {
+				// {
+				//   appid:"",  // 微信开放平台 - 应用 - AppId，注意和微信小程序、公众号 AppId 可能不一致
+				//   partnerid:"",   // 微信支付商户号
+				//   prepay_id:"",   // 统一下单订单号
+				//   sign:"",  // 签名
+				//   noncestr:"", // 随机字符串
+				//   timeStamp:"", // 时间戳
+				//  }
+
+				if (params.pay_type == 'WxMini') {
+					uni.requestPayment({
+						appId: payData.appid,
+						signType: 'MD5',
+						nonceStr: payData.noncestr,
+						package: 'prepay_id=' + payData.prepay_id,
+						paySign: payData.sign,
+						timeStamp: payData.timestamp,
+						success: e => {
+							this.paySuccess(params.order_id);
+						},
+						fail: e => {
+							uni.showModal({
+								content: '支付失败,原因为: ' + e.errMsg,
+								showCancel: false
+							});
+						},
+						complete: () => {}
+					});
+				} else if (params.pay_type == 'WxApp') {
+					uni.requestPayment({
+						provider: 'wxpay',
+						orderInfo: {
+							appid: payData.appid, // 微信开放平台 - 应用 - AppId，注意和微信小程序、公众号 AppId 可能不一致
+							noncestr: payData.noncestr, // 随机字符串
+							package: 'Sign=WXPay', // 固定值
+							partnerid: payData.partnerid, // 微信支付商户号
+							prepayid: payData.prepay_id, // 统一下单订单号
+							timestamp: payData.timestamp, // 时间戳（单位：秒）
+							sign: payData.sign // 签名，这里用的 MD5/RSA 签名
+						},
+						success: e => {
+							this.paySuccess(params.order_id);
+						},
+						fail: e => {
+							uni.showModal({
+								content: '支付失败,原因为: ' + e.errMsg,
+								showCancel: false
+							});
+						},
+						complete: () => {}
+					});
+				}
+			});
+		},
+
+		// 支付成功
+		paySuccess(orderId) {
+			uni.showToast({
+				title: '支付成功',
+				icon: 'none'
+			});
+
+			setTimeout(() => {
+				uni.navigateTo({
+					url: '/pages/order/paySuccess?orderId=' + orderId
+				});
+			}, 1500);
 		}
 
 		// jumpDetail: function(t) {
@@ -139,6 +256,18 @@ export default {
 .container,
 page {
 	background-color: #f5f5f9;
+}
+
+.button {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 200rpx;
+	height: 60rpx;
+	background-color: #f1c525;
+	border-radius: 10rpx;
+	font-size: 36rpx;
+	color: #ffffff;
 }
 
 .container {
