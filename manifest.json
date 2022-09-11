@@ -1,8 +1,8 @@
 {
-    "name" : "优厨上门",
+    "name" : "优厨",
     "appid" : "__UNI__2A551E8",
     "description" : "优厨上门",
-    "versionName" : "1.0.0",
+    "versionName" : "1.0.1",
     "versionCode" : "100",
     "transformPx" : false,
     "app-plus" : {
@@ -15,7 +15,9 @@
             "autoclose" : true,
             "delay" : 0
         },
-        "modules" : {},
+        "modules" : {
+            "Payment" : {}
+        },
         "distribute" : {
             "android" : {
                 "permissions" : [
@@ -36,9 +38,18 @@
                     "<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>"
                 ]
             },
-            "ios" : {},
+            "ios" : {
+                "dSYMs" : false
+            },
             "sdkConfigs" : {
-                "ad" : {}
+                "ad" : {},
+                "payment" : {
+                    "weixin" : {
+                        "__platform__" : [ "ios", "android" ],
+                        "appid" : "wx9b0ca8695776f224",
+                        "UniversalLinks" : ""
+                    }
+                }
             },
             "icons" : {
                 "android" : {

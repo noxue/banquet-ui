@@ -244,6 +244,7 @@ export default {
 							this.paySuccess(params.order_id);
 						},
 						fail: e => {
+							console.log(e);
 							uni.showModal({
 								content: '支付失败,原因为: ' + e.errMsg,
 								showCancel: false

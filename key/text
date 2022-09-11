@@ -1,0 +1,29 @@
+密码:baijiayan
+
+
+
+别名: baijiayan
+创建日期: 2022-9-10
+条目类型: PrivateKeyEntry
+证书链长度: 1
+证书[1]:
+所有者: CN=bai, OU=baijiayan, O=baijiayan, L=tianjin, ST=tianjin, C=zhongguo
+发布者: CN=bai, OU=baijiayan, O=baijiayan, L=tianjin, ST=tianjin, C=zhongguo
+序列号: 5bb182ba
+有效期开始日期: Sat Sep 10 13:50:32 CST 2022, 截止日期: Mon Aug 17 13:50:32 CST 2122
+证书指纹:
+         MD5: 63:61:83:5D:47:53:7B:F8:85:B0:C1:16:F3:07:B7:26
+         SHA1: D6:AF:D1:3F:59:0B:60:B3:25:8D:3C:36:DD:FA:29:70:D0:43:C8:81
+         SHA256: 77:8A:A2:BA:66:00:ED:E9:6E:94:82:73:20:B0:A3:4D:9C:A6:48:0F:AE:40:87:7F:52:8E:91:66:4B:E9:E7:BB
+         签名算法名称: SHA256withRSA
+         版本: 3
+
+扩展:
+
+#1: ObjectId: 2.5.29.14 Criticality=false
+SubjectKeyIdentifier [
+KeyIdentifier [
+0000: 4B 2D 92 29 48 2A 24 CB   63 BB 10 FA 3D 84 59 FD  K-.)H*$.c...=.Y.
+0010: EB 20 76 DC                                        . v.
+]
+]
